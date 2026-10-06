@@ -36,6 +36,6 @@ export const siteConfig = {
 
 /** 站点副标题：首页与 SEO 共用 */
 export const siteTagline =
-  "摄影只是生活的一块。这里还放着写下来的字、没做完的梦，和一些没什么用但很好玩的东西。";
+  "拍下来，写下来，做出来。剩下的，留给白日梦。";
 
 export type SiteConfig = typeof siteConfig;

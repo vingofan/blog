@@ -231,6 +231,15 @@ h1 {
 
 /* 静帧：视频不显示时出场。窄屏排在文字下面、略微出血到右侧；
    宽屏只在「减少动态效果」时出现，贴在右下，位置和视频结尾的定格一致。 */
+/* 首屏的舞台：比页面底色更深。黑豹是暗色主体，背景越深，它身上比背景亮的部分才越突出；
+   其余页面的底色不受影响。底部渐变回 --color-base，和下面的内容区接上，不留硬边。
+   这个颜色不能比视频里烘进去的暗场（#0f0e0d）更亮，否则 lighten 混合下会盖住豹子的暗部。 */
+.hero-stage {
+  background-color: #0d0c0b;
+  background-image: linear-gradient(to bottom, transparent 72%, var(--color-base) 100%);
+  border-bottom-color: transparent;
+}
+
 .hero-still {
   display: block;
   width: 112%;
@@ -250,11 +259,9 @@ h1 {
   /* 视频出场时 Hero 不要网格底纹（lighten 下网格线会从豹子的暗部透出来），
      换成豹子身下的一道落地投影 */
   .hero-stage {
-    background-image: radial-gradient(
-      ellipse 30% 5.5% at 71% 80.5%,
-      rgba(0, 0, 0, 0.7),
-      transparent
-    );
+    background-image:
+      radial-gradient(ellipse 30% 5.5% at 71% 80.5%, rgba(0, 0, 0, 0.7), transparent),
+      linear-gradient(to bottom, transparent 72%, var(--color-base) 100%);
     background-size: auto;
   }
   .hero-stage::before {
@@ -267,7 +274,7 @@ h1 {
     display: none;
   }
   .hero-stage {
-    background-image: none;
+    background-image: linear-gradient(to bottom, transparent 72%, var(--color-base) 100%);
   }
   .hero-stage::before {
     display: block;
