@@ -285,6 +285,223 @@ h1 {
   }
 }
 
+/* ============================================================
+   站名闪电动效（见 LightningTitle.tsx）
+   时间轴（秒）：0.15 闪电开始自上而下画出 → 0.31 劈到站名，字亮起 → ~0.8 闪电熄灭 → ~1.5 辉光回落
+   落点在站名正中；--d 是字到落点的距离（以字为单位），离得越远亮得越晚，像光从裂缝往外漏。
+   ============================================================ */
+.lt-stage {
+  position: relative;
+  display: inline-block;
+  isolation: isolate; /* 让 ::before 的 z-index:-1 留在站名自己的层里，不沉到 Hero 背景下面 */
+}
+
+/* 劈下来的瞬间站名背后的一团暖光，跟着闪电一起闪两下 */
+.lt-stage::before {
+  content: "";
+  position: absolute;
+  inset: -0.6em -1.2em;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 50% 60% at 50% 50%,
+    color-mix(in oklab, var(--color-accent) 38%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+  opacity: 0; /* 播完后回到这个值；不能靠 forwards 填充，否则悬在最后一帧 */
+  animation: lt-glow 1.1s linear 0.3s backwards;
+}
+
+.lt-char {
+  animation: lt-char 1.5s linear backwards;
+  animation-delay: calc(0.3s + var(--d) * 0.09s);
+}
+
+.lt-bolt {
+  position: absolute;
+  left: 50%;
+  top: -220px; /* 从 Hero 上方劈下来；窄屏字小，这个高度仍能从顶部穿过 */
+  width: 0.5em;
+  height: calc(220px + 0.95em);
+  transform: translateX(-50%);
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0; /* 同上：播完后闪电要消失 */
+  stroke: #fff;
+  stroke-width: 2.4px;
+  stroke-linejoin: miter;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px #fff)
+    drop-shadow(0 0 14px color-mix(in oklab, var(--color-accent) 80%, white));
+  animation:
+    lt-bolt 0.9s linear var(--bd, 0.15s) backwards,
+    lt-draw 0.17s cubic-bezier(0.3, 0, 0.7, 1) var(--bd, 0.15s) backwards;
+}
+.lt-bolt path {
+  vector-effect: non-scaling-stroke;
+}
+/* 分叉细一点 */
+.lt-bolt .lt-fork {
+  stroke-width: 1.4px;
+}
+
+/* Hero 闪电层：覆盖整个 Hero，落在黑豹那一侧（见 HeroLightning.tsx） */
+.hl-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.lt-bolt.hl-bolt {
+  top: 0;
+  left: var(--bl);
+  width: var(--bw);
+  height: var(--bh);
+}
+/* 两次大范围闪光：a 照亮豹子所在的右半边，b 是紧跟着的一下回闪。淡淡的暖金，不要实心的白 */
+.hl-flash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.hl-flash-a {
+  background: radial-gradient(
+    ellipse 48% 75% at 72% 52%,
+    color-mix(in oklab, var(--color-accent) 30%, transparent),
+    transparent 80%
+  );
+  animation: lt-glow 1.3s linear 0.45s backwards;
+}
+.hl-flash-b {
+  background: radial-gradient(
+    ellipse 34% 60% at 64% 45%,
+    color-mix(in oklab, var(--color-accent) 22%, transparent),
+    transparent 80%
+  );
+  animation: lt-glow 1s linear 0.62s backwards;
+}
+
+/* 站名以外的字：等闪电劈完再露出，亮起时带一下过曝的闪光，随后回落。
+   --ld 是各块出场的先后（秒），page.tsx 里逐个给。 */
+.lt-late {
+  animation: lt-late 1.1s linear backwards;
+  animation-delay: var(--ld, 0.9s);
+}
+@keyframes lt-late {
+  0% {
+    opacity: 0;
+    filter: brightness(2.6);
+  }
+  6% {
+    opacity: 1;
+    filter: brightness(2.3);
+  }
+  16% {
+    opacity: 0.35;
+    filter: brightness(1.7);
+  }
+  26% {
+    opacity: 1;
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes lt-draw {
+  from {
+    clip-path: inset(0 -60px 100% -60px);
+  }
+  to {
+    clip-path: inset(0 -60px -60px -60px);
+  }
+}
+/* 双闪：亮 → 暗 → 更亮 → 熄 */
+@keyframes lt-bolt {
+  0% {
+    opacity: 0;
+  }
+  1%,
+  14% {
+    opacity: 1;
+  }
+  22% {
+    opacity: 0.25;
+  }
+  32%,
+  46% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes lt-glow {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  16% {
+    opacity: 0.3;
+  }
+  26% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* 字：亮起（白 + 暖金辉光）→ 闪烁一下 → 回落到正常颜色。100% 不写属性，回到元素本来的样子 */
+@keyframes lt-char {
+  0% {
+    opacity: 0;
+    color: #fff;
+    text-shadow: none;
+  }
+  5% {
+    opacity: 1;
+    color: #fff;
+    text-shadow:
+      0 0 0.1em #fff,
+      0 0 0.4em var(--color-accent),
+      0 0 1em var(--color-accent);
+  }
+  16% {
+    opacity: 0.4;
+    color: #fff;
+    text-shadow: 0 0 0.3em var(--color-accent);
+  }
+  24% {
+    opacity: 1;
+    color: #fff;
+    text-shadow:
+      0 0 0.1em #fff,
+      0 0 0.45em var(--color-accent),
+      0 0 1.1em var(--color-accent);
+  }
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lt-stage::before,
+  .lt-char {
+    animation: none;
+  }
+  .lt-bolt,
+  .hl-layer {
+    display: none;
+  }
+  .lt-late {
+    animation: none;
+  }
+}
+
 /* 板块卡片：hover 时边框转冷色、遮罩淡入一条顶部细线 */
 @utility tech-card {
   position: relative;

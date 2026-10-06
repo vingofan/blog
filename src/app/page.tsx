@@ -4,6 +4,8 @@ import ProjectCard from "@/components/ProjectCard";
 import PostCard from "@/components/PostCard";
 import LazyImage from "@/components/LazyImage";
 import HeroVideo from "@/components/HeroVideo";
+import LightningTitle from "@/components/LightningTitle";
+import HeroLightning from "@/components/HeroLightning";
 import { siteConfig, siteTagline } from "@/config/site";
 import { getPostsBySection } from "@/lib/posts";
 import { getFeaturedPhotos, photos } from "@/lib/photos";
@@ -35,19 +37,27 @@ export default function HomePage() {
             宽屏下 Hero 的网格底纹让位给它（见 globals.css 的 .hero-stage）。 */}
         <HeroVideo />
         <div className="container-page relative flex flex-1 flex-col py-16 sm:py-20">
-          <p className="eyebrow">一个人的四个角落</p>
+          <p className="eyebrow lt-late" style={{ "--ld": "0.85s" } as React.CSSProperties}>
+            一个人的四个角落
+          </p>
 
           <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.12] tracking-tight sm:text-6xl lg:text-7xl">
-            {siteConfig.name}
+            <LightningTitle name={siteConfig.name} />
           </h1>
 
           {/* sm:text-[1rem] 而非 sm:text-base —— --color-base 被注册成同名颜色后，
               text-base 会连带把颜色染成底色，这行字就隐形了（详见 globals.css 注释） */}
-          <p className="mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]">
+          <p
+            className="lt-late mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]"
+            style={{ "--ld": "1s" } as React.CSSProperties}
+          >
             {siteTagline}
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div
+            className="lt-late mt-9 flex flex-wrap gap-3"
+            style={{ "--ld": "1.15s" } as React.CSSProperties}
+          >
             <Link
               href="/gallery"
               className="border border-(--color-line) px-5 py-2.5 text-[0.8rem] tracking-wide text-(--color-fg) transition-colors hover:border-(--color-accent) hover:text-(--color-accent)"
@@ -63,7 +73,10 @@ export default function HomePage() {
           </div>
 
           {/* 概览数字 */}
-          <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider sm:mt-14">
+          <dl
+            className="lt-late mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider sm:mt-14"
+            style={{ "--ld": "1.3s" } as React.CSSProperties}
+          >
             {[
               { label: "摄影", value: counts.photography, unit: "张" },
               { label: "写字", value: counts.writing, unit: "篇" },
@@ -96,7 +109,10 @@ export default function HomePage() {
 
           {/* 滚动提示：贴在 Hero 底部，点一下直接跳到「四个角落」。
               mt-auto 让它始终落在这一屏的底边，视口再矮也不会把内容顶出去。 */}
-          <div className="mt-auto flex justify-center pt-10 sm:pt-12">
+          <div
+            className="lt-late mt-auto flex justify-center pt-10 sm:pt-12"
+            style={{ "--ld": "1.5s" } as React.CSSProperties}
+          >
             <a
               href="#sections"
               className="scroll-cue"
@@ -123,6 +139,8 @@ export default function HomePage() {
             </a>
           </div>
         </div>
+        {/* 闪电层放最后：盖在文字和视频之上，不拦截点击 */}
+        <HeroLightning />
       </section>
 
       {/* 四个板块入口 */}

@@ -1,0 +1,41 @@
+/**
+ * 首页站名：一道闪电劈在站名正中，字在闪光里「漏」出来——离落点近的字先亮，两侧稍后，
+ * 像光从裂缝往外漏。全部是 CSS（见 globals.css 的 .lt-*），没有 JS，服务端渲染直接可用。
+ *
+ * 读屏与搜索引擎读到的是 sr-only 里的完整站名；视觉层 aria-hidden。
+ */
+export default function LightningTitle({ name }: { name: string }) {
+  const chars = [...name];
+  const mid = (chars.length - 1) / 2;
+
+  return (
+    <>
+      <span className="sr-only">{name}</span>
+      <span className="lt-stage" aria-hidden>
+        {chars.map((c, i) => (
+          <span
+            key={i}
+            className="lt-char"
+            style={{ "--d": Math.abs(i - mid) } as React.CSSProperties}
+          >
+            {c}
+          </span>
+        ))}
+        {/* 闪电：viewBox 纵向被拉伸（preserveAspectRatio none），线宽用 non-scaling-stroke 保持不变。
+            闪电靠 clip-path 自上而下揭开（见 .lt-bolt 的 lt-draw）。 */}
+        <svg
+          className="lt-bolt"
+          viewBox="0 0 100 300"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <path
+           
+            d="M58 0 L40 62 L63 96 L36 156 L60 190 L44 240 L54 300"
+          />
+          <path className="lt-fork" d="M63 96 L86 132 L76 168" />
+        </svg>
+      </span>
+    </>
+  );
+}
