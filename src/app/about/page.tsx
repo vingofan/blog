@@ -87,12 +87,11 @@ export default function AboutPage() {
           </p>
 
           <h2 id="contact">联系</h2>
-          <p>
-            转载、约拍、或者只是想聊聊，都可以发邮件到{" "}
-            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>。
-            一般在两天内回复。
-          </p>
+          {/* 只列联系方式，不加说明文字 */}
           <ul>
+            <li>
+              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            </li>
             {siteConfig.social.map((s) => (
               <li key={s.label}>
                 <a href={s.href} target="_blank" rel="noreferrer noopener">
