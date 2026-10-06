@@ -3,6 +3,9 @@
 一个个人博客，四个板块：**摄影**（作品集）、**写字的地方**（长文）、**白日梦**（碎片想法）、**好玩的项目**（做着玩的东西）。
 深色极简排版 + 低饱和科技感细节；文章用本地 Markdown 写作，作品与项目用 JSON 管理。
 
+**在线地址**：<https://vingoo.app.workbuddy.host/>
+**仓库**：<https://github.com/vingofan/blog>
+
 **技术栈**：Next.js（App Router）· React · TypeScript · Tailwind CSS v4
 **无数据库、无 CMS**：所有内容都是仓库里的文件，改完提交即可。
 
@@ -18,6 +21,8 @@
 ## 快速开始
 
 ```bash
+git clone https://github.com/vingofan/blog.git
+cd blog
 npm install
 npm run dev          # http://localhost:3000
 ```
