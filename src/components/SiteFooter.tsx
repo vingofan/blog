@@ -17,8 +17,9 @@ export default function SiteFooter() {
               <p className="text-sm font-semibold tracking-[0.14em] text-(--color-fg)">
                 {siteConfig.name}
               </p>
+              {/* 副标与页头保持一致，不要各写一套 */}
               <p className="mt-1.5 font-mono text-[0.6rem] tracking-[0.22em] text-(--color-fg-subtle)">
-                PERSONAL HOME
+                LIN XI
               </p>
             </div>
           </div>

@@ -207,7 +207,7 @@ coverAlt: "封面图的替代文本"
 category: "landscape"          # 仅用于占位图配色，不影响功能
 tags: ["风光", "曝光"]
 draft: false                   # true 则不上线
-author: "小梦"                  # 可选
+author: "林夕"                   # 可选
 readingTime: 6                 # 可选，不填会按字数自动估算
 ---
 

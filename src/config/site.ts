@@ -1,10 +1,10 @@
 // 站点级配置：改这里就能全站生效（SEO、导航、社交链接）
 export const siteConfig = {
   name: "林夕相心",
-  author: "小梦",
+  author: "林夕",
   role: "拍照 · 写字 · 做点小东西",
   location: "中国 · 深圳",
-  email: "hello@example.com",
+  email: "821314574@qq.com",
   // 部署上线前改成真实域名，站点地图与 canonical 链接都读它。
   // 优先级：SITE_URL（运行时可注入）> NEXT_PUBLIC_SITE_URL > 占位域名
   url:
@@ -23,11 +23,7 @@ export const siteConfig = {
     "独立项目",
     "生活记录",
   ],
-  social: [
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "微博", href: "https://weibo.com" },
-    { label: "GitHub", href: "https://github.com" },
-  ],
+  social: [{ label: "GitHub", href: "https://github.com/vingofan" }],
   nav: [
     { label: "首页", href: "/" },
     { label: "摄影", href: "/gallery" },

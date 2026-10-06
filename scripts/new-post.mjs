@@ -95,7 +95,7 @@ const tags = String(flags.tags || "未分类")
 const category = flags.category || "landscape";
 const cover = flags.cover || `/images/covers/${slug}.svg`;
 const draft = Boolean(flags.draft);
-const author = flags.author || "小梦";
+const author = flags.author || "林夕";
 
 // 板块：writing（写字的地方）/ dream（白日梦）/ photography（摄影笔记）
 const SECTIONS = new Set(["writing", "dream", "photography"]);

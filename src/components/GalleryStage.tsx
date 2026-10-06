@@ -11,7 +11,9 @@
  *   - 静止时每 6 秒巡览一张，点右侧任意一张即上墙并停下
  * 移动（<1024px）：墙隐藏，单列排布，点图直接看原图
  *
- * 墙上只绘制当前这张，相邻两张用隐藏 img 预热，避免 24 张大图同时驻留内存。
+ * 墙上挂的是「已解码的那张」：新图先 decode，解好才换，旧片在此期间一直挂着；
+ * 画框尺寸由 photos.json 的 width/height 直接算出，不依赖位图，所以任何时刻
+ * 都不会塌成一圈空卡纸。相邻两张另用隐藏 img 预热，避免 24 张大图同时驻留内存。
  */
 
 import type { ReactNode } from "react";
@@ -81,6 +83,38 @@ export default function GalleryStage({
 
   const current = visible[activeIndex];
 
+  /**
+   * 墙上真正挂着的那幅。
+   * 不能直接跟着 current 走：<figure> 带 key，换片时 img 是新建的元素，
+   * 新图没解码完之前 naturalWidth 是 0，画框会先塌成一圈卡纸、题字溢出到墙上，
+   * 再"啪"地弹回正确尺寸（实测本地 2 帧，冷缓存是一整个下载耗时）。
+   * 所以先解码，解好才上墙——旧片在此期间一直挂着。
+   */
+  const [shown, setShown] = useState<PhotoWithMeta | undefined>(undefined);
+
+  useEffect(() => {
+    setShown(undefined);
+  }, [activeCategory]);
+
+  useEffect(() => {
+    if (!current || shown?.id === current.id) return undefined;
+    let live = true;
+    const probe = new Image();
+    probe.src = current.src;
+    const commit = () => {
+      // 连点时旧的解码不能反过来把新的一张挤下墙
+      if (live) setShown(current);
+    };
+    probe.decode().then(commit).catch(commit);
+    return () => {
+      live = false;
+    };
+  }, [current, shown]);
+
+  /** 尚未解码完成时，旧的那幅继续挂在墙上 */
+  const stage = shown ?? current;
+  const stageIdx = stage ? Math.max(0, visible.indexOf(stage)) : 0;
+
   /** 点图卡：桌面设上舞台并停下巡览；移动端没有舞台，直接开原图 */
   const selectPhoto = useCallback((index: number, src: string) => {
     if (window.matchMedia("(max-width: 1023px)").matches) {
@@ -146,46 +180,50 @@ export default function GalleryStage({
               </p>
             </div>
           )}
-          {!isEmpty && current && (
+          {!isEmpty && stage && (
             <>
               {/* 挂在墙上的一幅画：等比缩放，绝不裁切 */}
               <div className="flex min-h-0 flex-1 items-center justify-center">
                 {/* key 让换片时重放一次入场动画，替掉原来两幅叠化的错位 */}
-                <figure key={current.id} className="stage-frame-in frame-wood max-w-full">
+                <figure key={stage.id} className="stage-frame-in frame-wood max-w-full">
                   <div className="frame-mat max-w-full">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={current.src}
-                      alt={current.alt}
-                      width={current.width}
-                      height={current.height}
+                      src={stage.src}
+                      alt={stage.alt}
+                      width={stage.width}
+                      height={stage.height}
                       decoding="async"
                       draggable={false}
                       style={{
+                        // 画框尺寸只由数据决定，不看位图解码状态：
+                        // 高 = min(可用高, 可用宽 ÷ 宽高比)，宽再由 aspect-ratio 反推。
+                        // 原来写 max-height + w-auto，img 一旦没解码完就塌成 0×0。
                         // 预留量 = 页头 80 + 墙面上内边距 32 + 标签牌上间距 24
                         //          + 标签牌定高 136 + 木框 36 + 卡纸上下 40+68 = 436px
                         // 下内边距 24 由 overflow-hidden 兜住，宁可留白也不许压到标签牌
-                        maxHeight: "calc(100svh - 28rem)",
-                        maxWidth: `calc(${PANEL_W} - 180px)`,
+                        height: `min(calc(100svh - 28rem), calc((${PANEL_W} - 180px) / ${stage.width / stage.height}))`,
+                        width: "auto",
+                        aspectRatio: `${stage.width} / ${stage.height}`,
                       }}
-                      className="frame-rebate block h-auto w-auto object-contain"
+                      className="frame-rebate block object-contain"
                     />
                     {/* 题字印在衬板下缘：作品名 + 拍摄参数 */}
                     <div className="frame-inscription">
                       <span
                         className={cx(
                           "whitespace-nowrap leading-snug",
-                          current.curated
+                          stage.curated
                             ? "text-[0.68rem] font-medium tracking-tight"
                             : "font-mono text-[0.6rem] tracking-wider"
                         )}
                       >
-                        {current.title}
+                        {stage.title}
                       </span>
                       <span className="font-mono text-[0.57rem] leading-snug tracking-wider text-[#8d847a]">
-                        {current.settings
-                          ? `${current.camera} · ${current.settings}`
-                          : current.camera || current.date}
+                        {stage.settings
+                          ? `${stage.camera} · ${stage.settings}`
+                          : stage.camera || stage.date}
                       </span>
                     </div>
                   </div>
@@ -201,27 +239,26 @@ export default function GalleryStage({
                 ))}
 
               {/* 标签牌：定高，好让照片的可用高度是个能算准的确定值 */}
+              {/* 牌子写的是"墙上这幅"的信息，所以跟着 stage 而不是 activeIndex */}
               <div className="mt-6 h-[8.5rem] shrink-0">
                 <div className="flex items-center gap-3 font-mono text-[0.62rem] tracking-wider text-(--color-fg-subtle)">
                   <span className="tracking-[0.18em]">
-                    {String(activeIndex + 1).padStart(2, "0")} /{" "}
+                    {String(stageIdx + 1).padStart(2, "0")} /{" "}
                     {String(visible.length).padStart(2, "0")}
                   </span>
-                  <span>{current.categoryLabel}</span>
+                  <span>{stage.categoryLabel}</span>
                   <span className="text-(--color-accent-dim)" aria-hidden>
                     {auto ? "巡览中" : "已停"}
                   </span>
                 </div>
 
                 <p className="mt-2 font-mono text-[0.65rem] tracking-wider text-(--color-fg-subtle)">
-                  {current.location
-                    ? `${current.location} · ${current.date}`
-                    : current.date}
+                  {stage.location ? `${stage.location} · ${stage.date}` : stage.date}
                 </p>
 
-                {current.caption ? (
+                {stage.caption ? (
                   <p className="mt-2.5 line-clamp-2 max-w-[54ch] text-[0.85rem] leading-relaxed text-(--color-fg-muted)">
-                    {current.caption}
+                    {stage.caption}
                   </p>
                 ) : null}
 
@@ -230,7 +267,7 @@ export default function GalleryStage({
                     <div
                       className="h-px bg-(--color-fg) transition-[width] duration-500 ease-out"
                       style={{
-                        width: `${((activeIndex + 1) / visible.length) * 100}%`,
+                        width: `${((stageIdx + 1) / visible.length) * 100}%`,
                       }}
                     />
                   </div>
