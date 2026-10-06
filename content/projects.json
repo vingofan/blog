@@ -1,0 +1,54 @@
+[
+  {
+    "id": "sketch-agent",
+    "name": "Sketch Agent",
+    "tagline": "一个 Claude Code 插件：把网页画板当键盘用。画草图发给 Claude，它读图后回复。",
+    "status": "进行中",
+    "year": "2026",
+    "tags": [
+      "AI",
+      "Claude Code",
+      "插件",
+      "数位板",
+      "开源"
+    ],
+    "stack": [
+      "JavaScript",
+      "Node.js",
+      "Claude Code Plugin"
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/vingofan/sketch-agent"
+      }
+    ],
+    "body": "## 它是什么\n\n一个 Claude Code 插件：**把网页画板当键盘用**。\n\n你用数位板或鼠标画草图，也可以配上文字，按 `⌘↵` 发给 Claude，它读图后回复，支持多轮对话。\n画板与 Code 窗口共用同一会话，Code 里的内容实时同步到画板。\n\n手绘的圆和直线会**自动规整**，还带直线、圆、矩形、箭头工具和快捷键。\n\n![Sketch Agent 界面：左侧画板画了直线、圆、正方形、箭头和不规则图形，右侧是 Claude 的多轮回复](/images/projects/sketch-agent-ui.jpg \"画板在左，Claude 的回复在右，同一个会话\")\n\n## 为什么做这个\n\n跟 AI 描述界面的时候，「左边窄一点、留白多一点」这种话来回翻译几遍仍然说不清，\n两边各自脑补一次，改个圆角能来回三轮。笔就在手上——不如直接画给它看。\n\n## 用起来是什么感觉\n\n打开 `/sketch-agent:start`，左边就是画板，右边是 Claude：\n\n- **只画、只打字、或者画完再补一句**，都支持\n- 按 `⌘↵` 发送，画板自动清空，下一轮从空白开始\n- 形状工具和画笔都有；用画笔画歪的圆、画歪的线，松开时会自动规整成正圆、直线\n  （按住 Alt 可以跳过规整，规整完按一次 `⌘Z` 先还原成手绘的样子）\n- 每条消息都记着，所以能接着聊：画 → 回复 → 再画 → 再回复\n\n界面上还带历史会话列表，可以接回之前在终端里开的任何一段对话。\n\n## 安装\n\n需要 Node 18+ 和已登录的 Claude Code。macOS 完整验证过。\n\n```bash\nclaude plugin marketplace add vingofan/sketch-agent\nclaude plugin install sketch-agent@sketch-agent\n```\n\n然后在项目里运行 `/sketch-agent:start` 启动，`/sketch-agent:stop` 停止。\n\n不想装插件的话，克隆下来直接跑也行，零依赖不用 `npm install`：\n\n```bash\ngit clone https://github.com/vingofan/sketch-agent && cd sketch-agent\nnode server.js      # 打开 http://127.0.0.1:3210\n```\n\n## 一些细节\n\n- 默认端口 3210，只在本机访问；数据存在 `~/.sketch-agent/`\n- 画板和对话区可以拖分隔条调比例，窄窗口会自动改成上下布局\n- 草图除了发给模型的那张图，还会存下笔画顺序、压感和时间间隔\n- 同一时间只处理一条消息，回复整段出现，不是逐字流式\n- Linux 和 Windows 还没验证，可能有问题\n\nMIT 协议，欢迎提 issue。\n",
+    "cover": "/images/projects/sketch-agent-ui.jpg",
+    "coverAlt": "画板在左、Claude 的多轮回复在右，两边共用同一个会话"
+  },
+  {
+    "id": "leopard-emoji",
+    "name": "黑豹表情包",
+    "tagline": "用 Qoder 驱动 qwen3.8-flash 做的一套黑豹表情包，11 张，三组。",
+    "status": "已完成",
+    "year": "2026",
+    "tags": [
+      "AI",
+      "多模态",
+      "Qoder",
+      "表情包",
+      "黑豹",
+      "开源"
+    ],
+    "stack": [
+      "Qoder",
+      "qwen3.8-flash",
+      "Image Generation",
+      "Markdown"
+    ],
+    "body": "## 它是什么\n\n一套**黑豹表情包**，11 张，1024×1024。同一只豹子，不同情绪、不同用途，分三组：\n\n- **表情组**（6 张）—— 日常聊天用\n- **图标组**（3 张）—— App 图标、桌面图标那种方章\n- **品牌组**（2 张）—— 站点头像、字标\n\n![黑豹scar：一只带疤、卷尾坐着的黑豹，浅米色背景](/images/projects/leopard-emoji/leopard-scar.webp \"表情组的定妆照，也就是本站的 logo\")\n\n## 怎么做的\n\n全程在 **Qoder** 里用 **qwen3.8-flash** 驱动。流程很简单：\n\n1. 先用文字把角色定下来 —— 什么动物、什么毛色、什么质感、什么背景\n2. 一个情绪一张图，逐张生成\n3. 不满意就把描述改得更细，重生成\n4. 挑出来的按用途分组\n\n一次跑下来 11 张，风格 surprisingly 统一 —— 同一套提示词骨架，只换情绪词。\n\n## 三组图\n\n### 表情组 · 6 张\n\n日常对话里最常用的六种情绪。都是同一只豹子，同样的浅米色影棚背景。\n\n<div class=\"not-prose my-6 grid grid-cols-2 gap-3 sm:grid-cols-3\">\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-smile-happy.webp\" alt=\"黑豹开心大笑，吐着舌头\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">开心大笑 · 收到好消息</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-smile-soft.webp\" alt=\"黑豹温柔微笑，眯着眼睛\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">温柔微笑 · 道晚安</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-dot.webp\" alt=\"黑豹圆眼睛无辜脸，卷着尾巴\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">无辜圆眼 · 我确实不知道</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-cold.webp\" alt=\"黑豹冷淡地侧眼看，耳朵压平\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">冷淡侧眼 · 你自己看着办</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-snarl.webp\" alt=\"黑豹龇牙低吼，眉毛压低\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">龇牙低吼 · 别惹我</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-sitting.webp\" alt=\"黑豹端坐着，尾巴围成一圈\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">端坐围观 · 一言不发</figcaption>\n  </figure>\n</div>\n\n### 图标组 · 3 张\n\n方章形，深色金属质感带一点暖光边缘。适合当 App 图标或者桌面图标。\n\n<div class=\"not-prose my-6 grid grid-cols-1 gap-4 sm:grid-cols-3\">\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-badge-dark.webp\" alt=\"方章图标：圆脸黑豹探头，湿润的大眼睛\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">圆润可爱</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-badge-smile-dark.webp\" alt=\"方章图标：黑豹眯眼笑，边缘有暖光\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">眯眼笑</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-badge-cold-dark.webp\" alt=\"方章图标：黑豹冷脸，耳朵压平\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">冷脸</figcaption>\n  </figure>\n</div>\n\n三张分别对应「可爱 / 眯眼笑 / 冷脸」三种气质，构图一致，只换表情。\n\n### 品牌组 · 2 张\n\n<div class=\"not-prose my-6 flex flex-col gap-4\">\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-scar.webp\" alt=\"黑豹侧脸，额头有一道疤，卷尾坐着\" width=\"800\" height=\"800\" loading=\"lazy\" style=\"aspect-ratio:1;object-fit:cover;width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">纯形象 · 本站的 logo</figcaption>\n  </figure>\n  <figure class=\"overflow-hidden rounded-xl border border-[var(--color-line-soft)]\">\n    <img src=\"/images/projects/leopard-emoji/leopard-wordmark.webp\" alt=\"字标：黑豹坐在左侧，右侧是站名与英文小标\" width=\"800\" height=\"533\" loading=\"lazy\" style=\"width:100%;height:auto\" />\n    <figcaption class=\"px-3 py-2 text-xs text-[var(--color-fg-subtle)]\">形象 + 字标</figcaption>\n  </figure>\n</div>\n\n## 关于「qwen3.8-flash 多模态生图」这件事\n\n得说准确一点，因为这事儿容易被说歪。\n\n**qwen3.8-flash 本身不能生图。** 它的架构是 `text + image + video → text` ——\n文本、图片、视频进去，只有文本出来。官方能力表里列的是 Image understanding 和\nVideo understanding，**没有 Image generation 这一项**。\n\n所以生图那一步，走的不是它自己。实际发生的是：\n\n- **qwen3.8-flash** 负责**理解和编排** —— 读参考图、判断风格是否一致、把情绪描述翻译成像样的提示词\n- **图像生成**是 Qoder 侧接的另一条通道\n\n那这套东西有意思在哪？\n\n**它强的是「多模态理解」这一环，而不是生图本身。** 整套流程里最难的其实不是画一只豹子，\n是**让 11 张图看起来像同一只豹子**。做到这点靠的是模型能看懂前一张图长什么样，\n然后据此生成下一张的提示词 —— 这个「看着上一张改下一张」的循环，正好是视觉理解的强项，\n而不是纯文本模型的强项。\n\n换句话说：**多模态模型不一定能画，但很会指挥能画的东西。** 把它当中枢比当画笔，划算。\n\n## 技术备忘\n\n- 全部 1024×1024 输出\n- 生成后统一 `sips` 缩到 800px + `cwebp -q 82`，单张 50–65KB，11 张共 568KB\n- logo 单独抠了背景（`magick floodfill` + `trim`），深色页头上是干净剪影\n- 原图 15.7MB → 压缩后 615KB，原始 PNG 挪到项目外存放\n\n## 拿去用\n\n图随便用，不需要署名。想改就改，想删就删。\n\n",
+    "cover": "/images/projects/leopard-emoji/leopard-scar.webp",
+    "coverAlt": "一只带疤、卷尾坐着的黑豹，浅米色影棚背景"
+  }
+]

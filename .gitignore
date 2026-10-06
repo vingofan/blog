@@ -1,0 +1,21 @@
+# WorkBuddy 工作空间元数据（若把项目目录设为工作空间会生成）
+.workbuddy
+
+# WorkBuddy 部署标记（内含本机绝对路径与 appId，不应进版本库）
+.wbapp_*.genie
+
+# AI 生图/生视频的原始输出与中间产物（体积大且无代码引用）
+# 定稿的图片请压缩后放进 public/images/
+vibe_images/
+videos/
+
+node_modules
+.next
+out
+build
+.DS_Store
+*.log
+.env*.local
+next-env.d.ts
+tsconfig.tsbuildinfo
+.vercel

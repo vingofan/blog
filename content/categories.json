@@ -1,0 +1,22 @@
+[
+  {
+    "id": "portrait",
+    "label": "人像",
+    "description": "自然光下的人像练习，记录被摄者松弛下来的那一秒。"
+  },
+  {
+    "id": "landscape",
+    "label": "风光",
+    "description": "山、海与城市的天际线，等一场光线往往要等上三天。"
+  },
+  {
+    "id": "street",
+    "label": "街拍",
+    "description": "街头没有剧本，只有手感、预判和一点点运气。"
+  },
+  {
+    "id": "architecture",
+    "label": "建筑",
+    "description": "把结构压成几何，让线条替你说完剩下的话。"
+  }
+]
