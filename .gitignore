@@ -4,6 +4,9 @@
 # WorkBuddy 部署标记（内含本机绝对路径与 appId，不应进版本库）
 .wbapp_*.genie
 
+# 其他 AI CLI 的本地配置（Claude Code 等），跟站点代码无关
+.claude/
+
 # AI 生图/生视频的原始输出与中间产物（体积大且无代码引用）
 # 定稿的图片请压缩后放进 public/images/
 vibe_images/
