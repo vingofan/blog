@@ -76,7 +76,7 @@ export default function PostCard({
         >
           {formatDateCN(post.date)}
         </time>
-        <h3 className="mt-2 text-base font-semibold leading-snug text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
+        <h3 className="mt-2 text-[1rem] font-semibold leading-snug text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
           {post.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-(--color-fg-muted)">

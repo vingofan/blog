@@ -30,7 +30,7 @@ export default function PageHeading({
           {title}
         </h1>
         {description && (
-          <p className="mt-4 max-w-2xl text-sm leading-loose text-(--color-fg-muted) sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem]">
             {description}
           </p>
         )}

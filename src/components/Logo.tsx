@@ -1,26 +1,25 @@
 /**
  * 站点标志
  * ------------------------------------------------------------------
- * 图形：黑豹方章（leopard-badge-cold-dark），一张金属质感的圆角方形徽章，
- * 里面是一只冷脸黑豹 —— 耳朵压平、瞳孔收紧、正面盯着你。
+ * 图形：站立的黑豹正脸（leopard-stand-front），抠成透明、不铺任何底色。
  *
- * 选它是因为「林夕相心」这个名字里那股安静的野性 ——
- * 不是家宅的安稳，是夜色里独自坐着的那只。
+ * 但抠图本身在深色页头上是不成立的：豹毛平均 RGB(33,31,29)，站点底色
+ * --color-base 是 #1b1a18，实测对底色只有 1.08:1，缩到 28px 就只剩一团
+ * 比背景略深的模糊。换掉之前那枚深色方章也正是这个原因。
  *
- * 这张图本身就是深色底（外圈 #010101），和站点底色 --color-base（#0a0a0b）
- * 几乎一致，所以方章边缘在深色页头上是「融进去」而不是「贴上去」，
- * 不用抠图，直接压到页头、页脚、favicon 三处。
+ * 解决办法是给轮廓加一圈**顶光描边**（上亮下弱，模拟棚拍打在背毛上的边光），
+ * 而不是提亮豹子本身——提亮会让它变灰，"黑豹"这个身份就没了。
+ * 描边由 alpha 外扩 30px + 高斯羽化得到，亮度按 y 从 1.0 衰减到 0.15。
  *
- * 两档尺寸：
- *   - logo-badge-cutout.webp（192px）用于页头、页脚
- *   - logo-badge-small.webp（96px）用于 favicon 等极小场景
- *
- * 写实的豹脸缩到 28px 仍能看清眼神（正脸比侧脸更适合小尺寸），
- * 再小就别用了。
+ * 母图在 vibe_images/leopard-mark-master.png（已按轮廓裁切并补成正方形），
+ * 下面两档由它等比缩放而来，不裁切：
+ *   - logo-mark.webp（192px）用于页头、页脚
+ *   - logo-mark-small.webp（96px）用于极小场景
+ * favicon 用 src/app/icon.png，同一母图的 192px PNG。
  */
 
-const LOGO_SRC = "/images/brand/logo-badge-cutout.webp";
-const LOGO_SMALL_SRC = "/images/brand/logo-badge-small.webp";
+const LOGO_SRC = "/images/brand/logo-mark.webp";
+const LOGO_SMALL_SRC = "/images/brand/logo-mark-small.webp";
 
 export default function Logo({
   size = 28,
@@ -42,7 +41,7 @@ export default function Logo({
       aria-hidden="true"
       draggable={false}
       className={className}
-      style={{ objectFit: "contain", opacity: 0.96 }}
+      style={{ objectFit: "contain" }}
     />
   );
 }

@@ -96,7 +96,7 @@ export default function HeroGallery({
             <h1 className="max-w-3xl text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-6xl">
               {siteName}
             </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/70 sm:text-[1rem]">
               {tagline}
             </p>
 

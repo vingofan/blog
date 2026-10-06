@@ -38,7 +38,7 @@ export default function SiteHeader() {
         <Link href="/" className="group flex items-center gap-3">
           <Logo size={28} className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5" />
           <span className="flex flex-col leading-none">
-            <span className="text-[0.95rem] font-semibold tracking-[0.1em] text-(--color-fg)">
+            <span className="font-display text-[0.95rem] font-semibold tracking-[0.1em] text-(--color-fg)">
               {siteConfig.name}
             </span>
             <span className="mt-1 hidden font-mono text-[0.6rem] tracking-[0.22em] text-(--color-fg-subtle) sm:block">

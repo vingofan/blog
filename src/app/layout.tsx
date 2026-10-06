@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
+import { Noto_Serif_SC } from "next/font/google";
 
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import RevealOnScroll from "@/components/RevealOnScroll";
+import CodeCopy from "@/components/CodeCopy";
 import { siteConfig } from "@/config/site";
 import { buildMetadata } from "@/lib/seo";
+
+/** 标题用的衬线体：和羊毛毡吉祥物的手工感对上；正文仍是系统黑体。
+    中文字体很大，不预加载，交给 unicode-range 分片按需取。 */
+const displayFont = Noto_Serif_SC({
+  weight: ["600", "900"],
+  variable: "--font-display-loaded",
+  display: "swap",
+  preload: false,
+});
 
 const SITE_TITLE = `${siteConfig.name} · 摄影 · 写字 · 白日梦 · 项目`;
 
@@ -44,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={siteConfig.locale}>
+    <html lang={siteConfig.locale} className={displayFont.variable}>
       <body className="min-h-dvh bg-(--color-base) text-(--color-fg) antialiased">
         <a
           href="#main"
@@ -60,6 +71,7 @@ export default function RootLayout({
         <SiteFooter />
 
         <RevealOnScroll />
+        <CodeCopy />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

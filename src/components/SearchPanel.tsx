@@ -150,7 +150,7 @@ export default function SearchPanel({
                             : "作品"}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-base font-medium text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
+                        <span className="block text-[1rem] font-medium text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
                           {doc.title}
                         </span>
                         {snippet && (

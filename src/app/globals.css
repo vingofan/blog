@@ -4,34 +4,41 @@
    设计变量：深色极简 · 大图优先 · 充足留白
    ============================================================ */
 @theme {
-  /* 中性色阶（背景由深到浅） */
+  /* 中性色阶（背景由深到浅）：高级灰，不是黑。
+     底色抬到 L*≈10 才读得出"灰"，同时仍比黑色的吉祥物亮一档，轮廓分得开；
+     保留极轻的暖偏，避免大面积灰底把照片的白平衡带冷。 */
   /* ⚠️ 别把色名改成 base / sm / lg / xl 这类词——Tailwind 会注册成颜色名，
    与字号工具类 text-base 撞车，导致 sm:text-base 的文字色被覆盖成底色而隐形。
    需要 sm 断点放大字号时，用 sm:text-[1rem]。 */
-  --color-base: #0a0a0b;
-  --color-base-soft: #101012;
-  --color-surface: #16161a;
-  --color-surface-hi: #1e1e23;
-  --color-line: #26262c;
-  --color-line-soft: #1c1c21;
+  --color-base: #1b1a18;
+  --color-base-soft: #222120;
+  --color-surface: #2a2927;
+  --color-surface-hi: #343331;
+  --color-line: #413f3c;
+  --color-line-soft: #323130;
 
   /* 文字 */
-  --color-fg: #f3f3f4;
-  --color-fg-muted: #9d9da6;
-  --color-fg-subtle: #6d6d77;
+  --color-fg: #f5f3f0;
+  --color-fg-muted: #aaa6a0;
+  --color-fg-subtle: #87837d;
 
-  /* 点缀色：一点点暖调，模拟胶片底色 */
+  /* 点缀色：一点点暖调，模拟胶片底色。
+     accent-dim 会被当作小字号文字色使用（巡览状态、关于页标签），
+     底色抬成高级灰后必须跟着提亮，否则对比度掉出 AA。 */
   --color-accent: #d9bb8c;
-  --color-accent-dim: #8c7757;
+  --color-accent-dim: #9b8465;
 
-  /* 科技感点缀：低饱和冷调，只用于编号、细线、标签，不做大面积铺色 */
-  --color-tech: #93aac0;
-  --color-tech-dim: #46545f;
+  /* 第二点缀色：取自雪豹眼睛的灰绿（原图取样约 #848476，提亮后使用），
+     只用于编号、细线、标签，不做大面积铺色。变量名沿用 tech，改名要动的地方太多。 */
+  --color-tech: #a9b09a;
+  --color-tech-dim: #4d5345;
   --color-grid-line: rgba(255, 255, 255, 0.035);
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  /* 标题衬线体：实际字体由 layout.tsx 的 next/font 注入到 --font-display-loaded */
+  --font-display: var(--font-display-loaded), "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", serif;
   --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas,
     monospace;
 
@@ -143,7 +150,8 @@
   font-size: 0.6875rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-fg-subtle);
+  /* 用主题金的暗色档：小标签是主题色在页面上最主要的出场位置 */
+  color: var(--color-accent-dim);
   font-family: var(--font-mono);
 }
 
@@ -193,10 +201,22 @@
   }
 }
 
-/* 首页 Hero 的背景动效：雪豹蹲在暗处，一道暖金光缓慢掠过它的毛。
-   8 秒无缝循环、无声。视频自带的舞台底色就是 --color-base，所以铺满时看不出矩形边界。
-   窄屏不启用：这是 16:9 的横构图，contain 会把豹子缩成一小团压到统计数字上，
-   cover 又会裁掉主体 —— 两头都不合算，不如把网格底纹还给 Hero。 */
+/* 标题统一用衬线体。h1 用最粗一档，h2 次之；正文和小标签不动。 */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+h1 {
+  font-weight: 900;
+}
+
+/* 首页 Hero 的背景动效：雪豹从暗处显形、走来、在右侧趴下，随后循环一段待机画面（见 HeroVideo.tsx），均无声。
+   mix-blend-mode: lighten —— 视频的暗场比页面底色更黑，取两者较亮的一方后，暗场直接透出页面底色，
+   以后再调 --color-base 也不用重新导出视频；豹子比底色亮，原样保留。
+   窄屏不启用：这是 16:9 的横构图，contain 会把豹子缩成一小团压到统计数字上，cover 又会裁掉主体，
+   所以窄屏改用同一只豹子的静帧（.hero-still）。 */
 .hero-video {
   position: absolute;
   inset: 0;
@@ -205,18 +225,63 @@
   object-fit: cover;
   object-position: 76% center;
   pointer-events: none;
+  mix-blend-mode: lighten;
   display: none;
+}
+
+/* 静帧：视频不显示时出场。窄屏排在文字下面、略微出血到右侧；
+   宽屏只在「减少动态效果」时出现，贴在右下，位置和视频结尾的定格一致。 */
+.hero-still {
+  display: block;
+  width: 112%;
+  max-width: none;
+  margin: 2.5rem -12% 0 auto;
+  pointer-events: none;
+  user-select: none;
 }
 
 @media (min-width: 1024px) {
   .hero-video {
     display: block;
   }
+  .hero-still {
+    display: none;
+  }
+  /* 视频出场时 Hero 不要网格底纹（lighten 下网格线会从豹子的暗部透出来），
+     换成豹子身下的一道落地投影 */
+  .hero-stage {
+    background-image: radial-gradient(
+      ellipse 30% 5.5% at 71% 80.5%,
+      rgba(0, 0, 0, 0.7),
+      transparent
+    );
+    background-size: auto;
+  }
+  .hero-stage::before {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-video {
     display: none;
+  }
+  .hero-stage {
+    background-image: none;
+  }
+  .hero-stage::before {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .hero-still {
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 12%;
+    width: 56%;
+    margin: 0;
   }
 }
 
@@ -566,6 +631,47 @@
   border: none;
   padding: 0;
   color: #cfd0d4;
+}
+
+/* 代码块的复制按钮（由 CodeCopy.tsx 在浏览器里挂上） */
+.code-block {
+  position: relative;
+}
+.code-copy {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  background-color: var(--color-surface);
+  color: var(--color-fg-subtle);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.code-copy:hover {
+  color: var(--color-fg);
+  border-color: var(--color-fg-subtle);
+}
+.code-copy[data-copied="true"] {
+  color: var(--color-accent);
+  border-color: var(--color-accent-dim);
+}
+/* 右上角给按钮让位，第一行不会被压住 */
+.code-block > pre {
+  padding-right: 3.25rem;
+}
+/* 纯文本块（贴出来的 prompt 这类成段文字）自动换行，不用横向拖着看 */
+.prose-photo pre:has(> code.language-text),
+.prose-dream pre:has(> code.language-text) {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* 表格容器（移动端横滑） */

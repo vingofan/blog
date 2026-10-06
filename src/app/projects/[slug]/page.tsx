@@ -61,7 +61,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           {project.name}
         </h1>
 
-        <p className="mt-5 max-w-2xl text-base leading-loose text-(--color-fg-muted)">
+        <p className="mt-5 max-w-2xl text-[1rem] leading-loose text-(--color-fg-muted)">
           {project.tagline}
         </p>
 

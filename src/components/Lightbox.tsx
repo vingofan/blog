@@ -162,7 +162,7 @@ export default function Lightbox({
         {showInfo && (
           <figcaption className="w-full max-w-3xl text-center">
             {item.title && (
-              <h2 className="text-base font-medium text-white">{item.title}</h2>
+              <h2 className="text-[1rem] font-medium text-white">{item.title}</h2>
             )}
             {item.caption && (
               <p className="mt-1.5 text-sm leading-relaxed text-white/60">

@@ -3,6 +3,7 @@ import SectionNav from "@/components/SectionNav";
 import ProjectCard from "@/components/ProjectCard";
 import PostCard from "@/components/PostCard";
 import LazyImage from "@/components/LazyImage";
+import HeroVideo from "@/components/HeroVideo";
 import { siteConfig, siteTagline } from "@/config/site";
 import { getPostsBySection } from "@/lib/posts";
 import { getFeaturedPhotos, photos } from "@/lib/photos";
@@ -26,21 +27,13 @@ export default function HomePage() {
     <>
       {/* Hero：站名 + 四个板块的概览
           min-height 撑满一屏，让底部那条「滚动提示」成为这一屏的出口，
-          而不是悬在内容与下一段之间的空隙。 */}
-      <section className="grid-bg glow-top relative flex min-h-[calc(100svh-4rem)] flex-col overflow-hidden border-b border-(--color-line-soft) sm:min-h-[calc(100svh-5rem)]">
-        {/* 背景动效：雪豹 + 缓慢掠过的一道暖金光。它把 Hero 的网格底纹盖住是有意为之——
-            视频自己带了同色的暗舞台和噪点，两者叠在一起只会糊。 */}
-        <video
-          className="hero-video"
-          src="/images/hero/leopard-graze.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden
-          tabIndex={-1}
-        />
+          而不是悬在内容与下一段之间的空隙。
+          负 margin + 等量 padding：让 Hero（连同背景视频）钻到透明的顶栏下面铺满整个视口，
+          文字位置不变。 */}
+      <section className="grid-bg hero-stage glow-top relative -mt-16 flex min-h-svh flex-col overflow-hidden border-b border-(--color-line-soft) pt-16 sm:-mt-20 sm:pt-20">
+        {/* 背景动效：雪豹从暗处显形、走过来，在右侧趴下看着你；演完后循环一段趴着的待机画面。
+            宽屏下 Hero 的网格底纹让位给它（见 globals.css 的 .hero-stage）。 */}
+        <HeroVideo />
         <div className="container-page relative flex flex-1 flex-col py-16 sm:py-20">
           <p className="eyebrow">一个人的四个角落</p>
 
@@ -50,7 +43,7 @@ export default function HomePage() {
 
           {/* sm:text-[1rem] 而非 sm:text-base —— --color-base 被注册成同名颜色后，
               text-base 会连带把颜色染成底色，这行字就隐形了（详见 globals.css 注释） */}
-          <p className="mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem]">
+          <p className="mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]">
             {siteTagline}
           </p>
 
@@ -76,7 +69,10 @@ export default function HomePage() {
               { label: "写字", value: counts.writing, unit: "篇" },
               { label: "白日梦", value: counts.dream, unit: "则" },
               { label: "项目", value: counts.project, unit: "个" },
-            ].map((item) => (
+            ]
+              // 还没有内容的板块先不报数——首屏写着「0 篇」只会让人觉得这里是空的
+              .filter((item) => item.value > 0)
+              .map((item) => (
               <div key={item.label} className="flex items-baseline gap-2">
                 <dt className="text-(--color-fg-subtle)">{item.label}</dt>
                 <dd className="text-(--color-fg)">
@@ -86,6 +82,17 @@ export default function HomePage() {
               </div>
             ))}
           </dl>
+
+          {/* 视频不出场时（窄屏、减少动态效果）的替身：同一只豹子的定格 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="hero-still"
+            src="/images/hero/leopard-rest.webp"
+            width={1090}
+            height={700}
+            alt=""
+            aria-hidden
+          />
 
           {/* 滚动提示：贴在 Hero 底部，点一下直接跳到「四个角落」。
               mt-auto 让它始终落在这一屏的底边，视口再矮也不会把内容顶出去。 */}
@@ -290,7 +297,7 @@ export default function HomePage() {
           <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
             {siteConfig.author} · {siteConfig.role}
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-loose text-(--color-fg-muted) sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem]">
             常驻{siteConfig.location}。拍照只是生活里的一块，另外几块是写字、胡思乱想，
             和做一些没什么用但很好玩的小东西。这个站点就是这四块的存放处——
             不追日更，也不追热点，攒够了才放上来。

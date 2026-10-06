@@ -33,6 +33,10 @@ interface GalleryStageProps {
 /** 无人操作时的巡览间隔 */
 const STAGE_INTERVAL = 6000;
 
+/** 左侧墙面占视口的宽度。改这里要同步改下面 className 里的 lg:w-[60vw]，
+    Tailwind 的类名必须是字面量，没法用变量拼 */
+const PANEL_W = "60vw";
+
 /**
  * 网格卡的实际宽度。右列固定占视口 44%，列数由 column-width 决定：
  * 1024 下一列约 38vw，宽屏两列约 20vw —— 按 38vw 出图正好够 2× DPR。
@@ -131,8 +135,8 @@ export default function GalleryStage({
       {/* ============ 左侧：整面墙（移动端隐藏） ============ */}
       {/* top 偏移让开 sticky 页头（h-16 / sm:h-20），高度补足差值，保持视觉整高 */}
       {/* 宽度固定，比右列宽一档；竖图就在墙上留白居中，不再牵动右列重排 */}
-      <div className="sticky top-16 hidden shrink-0 sm:top-20 lg:block lg:h-[calc(100svh-5rem)] lg:w-[60%]">
-        <div className="relative flex h-full w-full flex-col bg-linear-to-b from-(--color-base) via-(--color-base) to-(--color-base-soft) px-8 pt-8 pb-6">
+      <div className="sticky top-16 hidden shrink-0 sm:top-20 lg:block lg:h-[calc(100svh-5rem)] lg:w-[60vw]">
+        <div className="relative flex h-full w-full flex-col overflow-hidden bg-linear-to-b from-(--color-base) via-(--color-base) to-(--color-base-soft) px-8 pt-8 pb-6">
           {isEmpty && (
             <div className="flex flex-1 items-center justify-center px-8 text-center">
               <p className="text-sm leading-relaxed text-(--color-fg-subtle)">
@@ -157,7 +161,14 @@ export default function GalleryStage({
                       height={current.height}
                       decoding="async"
                       draggable={false}
-                      className="frame-rebate block h-auto max-h-[calc(100svh-23.5rem)] w-auto max-w-full object-contain"
+                      style={{
+                        // 预留量 = 页头 80 + 墙面上内边距 32 + 标签牌上间距 24
+                        //          + 标签牌定高 136 + 木框 36 + 卡纸上下 40+68 = 436px
+                        // 下内边距 24 由 overflow-hidden 兜住，宁可留白也不许压到标签牌
+                        maxHeight: "calc(100svh - 28rem)",
+                        maxWidth: `calc(${PANEL_W} - 180px)`,
+                      }}
+                      className="frame-rebate block h-auto w-auto object-contain"
                     />
                     {/* 题字印在衬板下缘：作品名 + 拍摄参数 */}
                     <div className="frame-inscription">
@@ -165,13 +176,13 @@ export default function GalleryStage({
                         className={cx(
                           "whitespace-nowrap leading-snug",
                           current.curated
-                            ? "text-[0.75rem] font-medium tracking-tight"
-                            : "font-mono text-[0.66rem] tracking-wider"
+                            ? "text-[0.68rem] font-medium tracking-tight"
+                            : "font-mono text-[0.6rem] tracking-wider"
                         )}
                       >
                         {current.title}
                       </span>
-                      <span className="font-mono text-[0.62rem] leading-snug tracking-wider text-[#8d847a]">
+                      <span className="font-mono text-[0.57rem] leading-snug tracking-wider text-[#8d847a]">
                         {current.settings
                           ? `${current.camera} · ${current.settings}`
                           : current.camera || current.date}
@@ -189,8 +200,8 @@ export default function GalleryStage({
                   <img key={visible[i].id} src={visible[i].src} alt="" aria-hidden className="hidden" />
                 ))}
 
-              {/* 标签牌 */}
-              <div className="mt-6 shrink-0">
+              {/* 标签牌：定高，好让照片的可用高度是个能算准的确定值 */}
+              <div className="mt-6 h-[8.5rem] shrink-0">
                 <div className="flex items-center gap-3 font-mono text-[0.62rem] tracking-wider text-(--color-fg-subtle)">
                   <span className="tracking-[0.18em]">
                     {String(activeIndex + 1).padStart(2, "0")} /{" "}
@@ -209,7 +220,7 @@ export default function GalleryStage({
                 </p>
 
                 {current.caption ? (
-                  <p className="mt-2.5 max-w-[54ch] text-[0.85rem] leading-relaxed text-(--color-fg-muted)">
+                  <p className="mt-2.5 line-clamp-2 max-w-[54ch] text-[0.85rem] leading-relaxed text-(--color-fg-muted)">
                     {current.caption}
                   </p>
                 ) : null}

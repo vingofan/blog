@@ -53,7 +53,7 @@ export default function SectionNav({
 
                 {typeof count === "number" && (
                   <p className="mt-5 font-mono text-[0.65rem] tracking-wider text-(--color-fg-subtle)">
-                    {count} 条内容
+                    {count > 0 ? `${count} 条内容` : "还在路上"}
                   </p>
                 )}
               </Link>

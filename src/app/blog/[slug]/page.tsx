@@ -103,7 +103,7 @@ export default async function PostPage({ params }: PageProps) {
           <span>{post.author || siteConfig.author}</span>
         </div>
 
-        <p className="mt-6 max-w-3xl text-base leading-loose text-(--color-fg-muted) sm:text-lg">
+        <p className="mt-6 max-w-3xl text-[1rem] leading-loose text-(--color-fg-muted) sm:text-lg">
           {post.excerpt}
         </p>
 

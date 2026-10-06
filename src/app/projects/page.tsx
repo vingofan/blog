@@ -33,7 +33,7 @@ export default function ProjectsPage() {
       ) : (
         <>
           {/* 状态概览 */}
-          <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-y border-(--color-line-soft) py-5 font-mono text-[0.7rem] tracking-wider">
+          <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider">
             {(
               [
                 ["进行中", counts["进行中"] ?? 0],

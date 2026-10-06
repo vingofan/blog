@@ -25,7 +25,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         </span>
       </div>
 
-      <h3 className="mt-5 text-base font-semibold leading-snug tracking-tight text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
+      <h3 className="mt-5 text-[1rem] font-semibold leading-snug tracking-tight text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
         <Link href={`/projects/${project.id}`}>{project.name}</Link>
       </h3>
 
