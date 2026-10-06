@@ -31,6 +31,13 @@ export const metadata: Metadata = {
     default: SITE_TITLE,
     template: `%s · ${siteConfig.name}`,
   },
+  // 显式声明，不交给 Next 自动推导：
+  // 部署目录里还残留着早期版本的 icon.svg（发布是覆盖上传、不删旧文件），
+  // 自动推导会把它排在第一个，浏览器取到的就是那个旧 logo。
+  icons: {
+    icon: [{ url: "/icon.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
 };
 
 /** 结构化数据：提升搜索结果的展示形态 */
