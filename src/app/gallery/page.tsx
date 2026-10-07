@@ -27,14 +27,12 @@ export default async function GalleryPage({
   // 页头渲染进右列顶部，这样左列面板能从视口顶端就占满整屏
   const header = (
     <header key="gallery-header" className="mb-10 lg:mb-12">
-      <p className="eyebrow">
+      {/* 板块名不再单占一行大字——右列顶部要留给画框，眉标本身兼任 h1 */}
+      <h1 className="eyebrow">
         {section.code} · 共 {photos.length} 张
-      </p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-        {section.label}
       </h1>
       {/* sm:text-[1rem] 而非 sm:text-base —— --color-base 撞名会把文字染成底色 */}
-      <p className="mt-5 max-w-xl text-sm leading-relaxed text-(--color-fg-subtle) sm:text-[1rem]">
+      <p className="mt-4 max-w-xl text-sm leading-relaxed text-(--color-fg-subtle) sm:text-[1rem]">
         {section.description}
       </p>
       <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-(--color-line-soft) pb-6 font-mono text-[0.66rem] tracking-wider text-(--color-fg-subtle)">
