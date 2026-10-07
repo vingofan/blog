@@ -163,7 +163,9 @@ photo-blog/
     │   ├── robots.ts             SEO：robots 规则
     │   └── globals.css           全局样式与设计变量
     ├── components/               ← 可复用组件
-    │   ├── HeroGallery.tsx        首页自动轮播大图
+    │   ├── HeroVideo.tsx          首页黑豹一镜到底视频
+    │   ├── HeroLightning.tsx      首页闪电降临动效
+    │   ├── GalleryStage.tsx       摄影页：左墙画框 + 右瀑布流
     │   ├── GalleryGrid.tsx        分类筛选 + 瀑布流
     │   ├── Lightbox.tsx           灯箱放大预览
     │   ├── LazyImage.tsx          懒加载图片（渐显 + 占位）
@@ -353,7 +355,8 @@ export const metadata = buildMetadata({
 | 能力 | 实现位置 |
 | --- | --- |
 | 深色极简主题变量（配色/字体/容器宽度） | `src/app/globals.css` 的 `@theme` 段 |
-| 首页精选大图轮播 | `components/HeroGallery.tsx` |
+| 首页黑豹视频 Hero（闪电降临 → 豹子亮出） | `components/HeroVideo.tsx` + `HeroLightning.tsx` |
+| 摄影页左墙画框 + 右瀑布流舞台 | `components/GalleryStage.tsx` |
 | 瀑布流（1/2/3/4 列自适应） | `globals.css` 的 `.masonry`，纯 CSS columns |
 | 灯箱（← → 切换、Esc 关闭、`i` 切信息、触屏滑动） | `components/Lightbox.tsx` |
 | 图片懒加载 + 骨架微光 + 渐显 | `components/LazyImage.tsx` |
@@ -366,7 +369,7 @@ export const metadata = buildMetadata({
 
 现在刻意用了原生 `<img>`，因为占位图是 SVG（`next/image` 默认不处理 SVG），而且避免你在替换真实照片时被优化器的配置绊住。
 
-换成真实 JPEG 之后，想启用自动 WebP/AVIF 压缩与响应式 srcset，只需在 `next.config.ts` 里把 `images.remotePatterns` 配好，再把 `LazyImage.tsx` / `HeroGallery.tsx` / `Lightbox.tsx` 里的 `<img>` 换成 `<Image fill sizes="…" />` 即可，其余布局无需改动。
+换成真实 JPEG 之后，想启用自动 WebP/AVIF 压缩与响应式 srcset，只需在 `next.config.ts` 里把 `images.remotePatterns` 配好，再把 `LazyImage.tsx` / `Lightbox.tsx` / `GalleryStage.tsx` / `Logo.tsx` / `EmptyHint.tsx` 里的 `<img>` 换成 `<Image fill sizes="…" />` 即可，其余布局无需改动。
 
 ---
 

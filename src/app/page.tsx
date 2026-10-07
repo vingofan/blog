@@ -41,7 +41,7 @@ export default function HomePage() {
         <HeroVideo />
         <div className="hero-fade" aria-hidden />
         <div className="container-page relative flex flex-1 flex-col py-16 sm:py-20">
-          {/* 文案块：宽屏靠右（豹子趴下后头在左边，右上方是空的），窄屏仍然靠左 */}
+          {/* 文案块：宽屏下竖排贴右上角（站名、副标、小标三列），按钮沉到左下、统计沉到右下（见 globals.css 的 .hero-copy）；窄屏仍然横排靠左 */}
           <div className="hero-copy">
           <p className="eyebrow lt-late" style={{ "--ld": "1.8s" } as React.CSSProperties}>
             一个人的四个角落

@@ -222,6 +222,14 @@ h1 {
    → 文案逐块露出（.lt-late）。--hero-reveal 是豹子出场的时刻，HeroVideo.tsx 里的 HERO_REVEAL_MS
    要和它一致——视频从那一刻才开始播。 */
 .hero-stage {
+  /* 首屏的文字配色。背景是暖调的橄榄灰，纯白的字在上面发冷、像贴上去的；
+     改用卡其灰这一路的颜色，和背景同一个色温。站名只比副标亮一点点，靠字号和字重立住，
+     不靠亮度——画面里最亮的东西留给豹子那双翠绿的眼睛。金色（--color-accent）只用在小标和按钮描边上。 */
+  --color-fg: #c6c0a8;
+  color: var(--color-fg); /* 必须重新声明一次：正文颜色是 body 上算好再继承下来的，只改变量不会影响站名 */
+  --color-fg-muted: #b3ae96;
+  --color-fg-subtle: #8f8b74;
+  --color-line: rgb(217 187 140 / 0.42);
   --hero-reveal: 1.15s;
   background-color: var(--color-base);
   border-bottom-color: transparent;
@@ -296,10 +304,55 @@ h1 {
   .hero-still {
     display: none; /* 宽屏有视频；定格是趴着的，和视频开头站着的画面对不上，不能垫在下面 */
   }
-  /* 文案块靠右：豹子趴下之后头在画面左边，右上方是空的 */
+  /* 文案块：竖排，贴在首屏右上角。从右到左三列——站名、副标、小标。
+     豹子趴下后背线从左上斜向右下，右上角这一条是空的，竖排正好顺着这块空地往下走。
+     字号跟着视口高度缩（vh），窗口矮的时候不至于伸到豹子背上。
+     这些规则写在层外，优先级高于 page.tsx 里的 Tailwind 工具类。 */
+  .hero-stage > .container-page {
+    padding-top: 1.6rem;
+  }
   .hero-copy {
-    width: 27rem;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    gap: 1.5rem;
     margin-left: auto;
+  }
+  .hero-copy h1 {
+    writing-mode: vertical-rl;
+    margin: 0;
+    max-width: none;
+    font-size: min(5rem, 9.2vh);
+    line-height: 1;
+    letter-spacing: 0.14em;
+  }
+  .hero-copy h1 + p {
+    writing-mode: vertical-rl;
+    margin: 0.3em 0 0;
+    max-width: none;
+    height: 15.8em; /* 正好在「做出来。」后面换列 */
+    font-size: min(1rem, 2.1vh);
+    line-height: 2.2;
+    letter-spacing: 0.3em;
+  }
+  .hero-copy > .eyebrow {
+    order: 3; /* 小标在 DOM 里排第一，row-reverse 下会跑到最右；把它挪到最左，最右边留给站名 */
+    writing-mode: vertical-rl;
+    margin: 0.4em 0 0;
+    letter-spacing: 0.42em;
+  }
+  /* 按钮和统计数字不跟在文案后面了，沉到首屏底部：按钮在左下，统计在右下 */
+  .hero-copy > div {
+    position: absolute;
+    left: 0;
+    bottom: 4rem;
+    margin: 0;
+  }
+  .hero-copy > dl {
+    position: absolute;
+    right: 0;
+    bottom: 4.7rem;
+    margin: 0;
   }
 }
 
