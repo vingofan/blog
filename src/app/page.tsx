@@ -33,11 +33,17 @@ export default function HomePage() {
           负 margin + 等量 padding：让 Hero（连同背景视频）钻到透明的顶栏下面铺满整个视口，
           文字位置不变。 */}
       <section className="grid-bg hero-stage glow-top relative -mt-16 flex min-h-svh flex-col overflow-hidden border-b border-(--color-line-soft) pt-16 sm:-mt-20 sm:pt-20">
-        {/* 背景动效：雪豹从暗处显形、走过来，在右侧趴下看着你；演完后循环一段趴着的待机画面。
-            宽屏下 Hero 的网格底纹让位给它（见 globals.css 的 .hero-stage）。 */}
+        {/* 背景：黑豹站着、走来、咆哮、趴下，演完后循环一段趴着的待机画面。
+            它是整屏的背景，文字叠在上面；视频不出场时（窄屏、减少动态效果）由 hero-still 这张定格顶上。
+            出场顺序：闪电先劈（LightningTitle + HeroLightning）→ 豹子亮出来 → 最后一道闪电熄灭后，站名和文案依次淡入。
+            hero-fade 是底部那段渐变回页面底色的过渡。 */}
+        <div className="hero-still" aria-hidden />
         <HeroVideo />
+        <div className="hero-fade" aria-hidden />
         <div className="container-page relative flex flex-1 flex-col py-16 sm:py-20">
-          <p className="eyebrow lt-late" style={{ "--ld": "0.85s" } as React.CSSProperties}>
+          {/* 文案块：宽屏靠右（豹子趴下后头在左边，右上方是空的），窄屏仍然靠左 */}
+          <div className="hero-copy">
+          <p className="eyebrow lt-late" style={{ "--ld": "1.8s" } as React.CSSProperties}>
             一个人的四个角落
           </p>
 
@@ -49,14 +55,14 @@ export default function HomePage() {
               text-base 会连带把颜色染成底色，这行字就隐形了（详见 globals.css 注释） */}
           <p
             className="lt-late mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]"
-            style={{ "--ld": "1s" } as React.CSSProperties}
+            style={{ "--ld": "1.95s" } as React.CSSProperties}
           >
             {siteTagline}
           </p>
 
           <div
             className="lt-late mt-9 flex flex-wrap gap-3"
-            style={{ "--ld": "1.15s" } as React.CSSProperties}
+            style={{ "--ld": "2.1s" } as React.CSSProperties}
           >
             <Link
               href="/gallery"
@@ -75,7 +81,7 @@ export default function HomePage() {
           {/* 概览数字 */}
           <dl
             className="lt-late mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider sm:mt-14"
-            style={{ "--ld": "1.3s" } as React.CSSProperties}
+            style={{ "--ld": "2.25s" } as React.CSSProperties}
           >
             {[
               { label: "摄影", value: counts.photography, unit: "张" },
@@ -96,22 +102,13 @@ export default function HomePage() {
             ))}
           </dl>
 
-          {/* 视频不出场时（窄屏、减少动态效果）的替身：同一只豹子的定格 */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="hero-still"
-            src="/images/hero/leopard-rest.webp"
-            width={1090}
-            height={700}
-            alt=""
-            aria-hidden
-          />
+          </div>
 
           {/* 滚动提示：贴在 Hero 底部，点一下直接跳到「四个角落」。
               mt-auto 让它始终落在这一屏的底边，视口再矮也不会把内容顶出去。 */}
           <div
             className="lt-late mt-auto flex justify-center pt-10 sm:pt-12"
-            style={{ "--ld": "1.5s" } as React.CSSProperties}
+            style={{ "--ld": "2.45s" } as React.CSSProperties}
           >
             <a
               href="#sections"
