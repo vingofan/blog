@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
  * 第 8 秒它已经基本静止，在静止的地方折返才看不出来。
  */
 /** 豹子出场的时刻（毫秒，从页面加载起算）。要和 globals.css 里 --hero-reveal 保持一致。 */
-const HERO_REVEAL_MS = 1150;
+const HERO_REVEAL_MS = 620;
 
 /** 开场视频从第几秒开始播。素材前 1 秒豹子站着没动，量逐帧运动量是从 0.8–1 秒开始起步的；
     出场的闪光要 0.3 秒左右才亮透，所以从 1 秒处起播，看清它的时候它已经在走。 */

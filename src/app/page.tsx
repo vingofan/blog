@@ -5,6 +5,7 @@ import PostCard from "@/components/PostCard";
 import LazyImage from "@/components/LazyImage";
 import HeroVideo from "@/components/HeroVideo";
 import LightningTitle from "@/components/LightningTitle";
+import ParticleTitle from "@/components/ParticleTitle";
 import HeroLightning from "@/components/HeroLightning";
 import { siteConfig, siteTagline } from "@/config/site";
 import { getPostsBySection } from "@/lib/posts";
@@ -43,8 +44,9 @@ export default function HomePage() {
         <div className="container-page relative flex flex-1 flex-col py-16 sm:py-20">
           {/* 文案块：宽屏下竖排贴右上角（站名、副标、小标三列），按钮沉到左下、统计沉到右下（见 globals.css 的 .hero-copy）；窄屏仍然横排靠左 */}
           <div className="hero-copy">
-          <p className="eyebrow lt-late" style={{ "--ld": "1.8s" } as React.CSSProperties}>
+          <p className="eyebrow lt-late pt-host" style={{ "--ld": "0.9s" } as React.CSSProperties}>
             一个人的四个角落
+            <ParticleTitle crisp startMs={1620} delayMs={120} from=".lt-stage > .lt-bolt" />
           </p>
 
           <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.12] tracking-tight sm:text-6xl lg:text-7xl">
@@ -54,15 +56,16 @@ export default function HomePage() {
           {/* sm:text-[1rem] 而非 sm:text-base —— --color-base 被注册成同名颜色后，
               text-base 会连带把颜色染成底色，这行字就隐形了（详见 globals.css 注释） */}
           <p
-            className="lt-late mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]"
-            style={{ "--ld": "1.95s" } as React.CSSProperties}
+            className="lt-late pt-host mt-7 max-w-xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem] lg:max-w-[25rem]"
+            style={{ "--ld": "0.9s" } as React.CSSProperties}
           >
             {siteTagline}
+            <ParticleTitle crisp startMs={1560} delayMs={60} from=".lt-stage > .lt-bolt" />
           </p>
 
           <div
             className="lt-late mt-9 flex flex-wrap gap-3"
-            style={{ "--ld": "2.1s" } as React.CSSProperties}
+            style={{ "--ld": "2.35s" } as React.CSSProperties}
           >
             <Link
               href="/gallery"
@@ -81,7 +84,7 @@ export default function HomePage() {
           {/* 概览数字 */}
           <dl
             className="lt-late mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider sm:mt-14"
-            style={{ "--ld": "2.25s" } as React.CSSProperties}
+            style={{ "--ld": "2.5s" } as React.CSSProperties}
           >
             {[
               { label: "摄影", value: counts.photography, unit: "张" },
@@ -108,7 +111,7 @@ export default function HomePage() {
               mt-auto 让它始终落在这一屏的底边，视口再矮也不会把内容顶出去。 */}
           <div
             className="lt-late mt-auto flex justify-center pt-10 sm:pt-12"
-            style={{ "--ld": "2.45s" } as React.CSSProperties}
+            style={{ "--ld": "2.65s" } as React.CSSProperties}
           >
             <a
               href="#sections"

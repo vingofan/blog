@@ -26,15 +26,16 @@ export default function SiteHeader() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header
-      className={cx(
-        "sticky top-0 z-50 transition-colors duration-300",
-        scrolled
-          ? "border-b border-(--color-line-soft) bg-(--color-base)/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
-      )}
-    >
-      <div className="container-page flex h-16 items-center justify-between gap-6 sm:h-20">
+    // 顶栏本身是透明的，只负责占住原来的高度（首屏靠这个高度做负 margin）；
+    // 看得见的是里面那条悬浮的玻璃胶囊（.glass-bar，见 globals.css）。
+    <header className="sticky top-0 z-50">
+      <div className="container-page flex h-16 items-center sm:h-20">
+       <div
+        className={cx(
+          "glass-bar -mx-3 flex h-12 flex-1 items-center justify-between gap-6 px-4 sm:-mx-5 sm:h-[3.25rem] sm:px-6",
+          scrolled && "glass-bar-solid"
+        )}
+       >
         <Link href="/" className="group flex items-center gap-3">
           <Logo size={28} className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5" />
           <span className="flex flex-col leading-none">
@@ -105,6 +106,7 @@ export default function SiteHeader() {
             </svg>
           </button>
         </div>
+       </div>
       </div>
 
       {/* 移动端菜单 */}
@@ -112,9 +114,9 @@ export default function SiteHeader() {
         <nav
           id="mobile-nav"
           aria-label="移动端导航"
-          className="border-t border-(--color-line-soft) bg-(--color-base)/95 backdrop-blur-xl md:hidden"
+          className="container-page md:hidden"
         >
-          <ul className="container-page flex flex-col py-2">
+          <ul className="glass-bar glass-bar-solid glass-panel -mx-3 flex flex-col px-5 py-2">
             {siteConfig.nav.map((item) => (
               <li key={item.href}>
                 <Link
