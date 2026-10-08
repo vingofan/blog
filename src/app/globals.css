@@ -442,31 +442,27 @@ h1 {
    三层叠出来：① 背后的画面被模糊、提饱和、略提亮（backdrop-filter），像隔着一块厚玻璃；
    ② 玻璃本身只有一点点白，斜向不均匀，上缘一道亮线、下缘一道暗线，是玻璃边的受光和厚度；
    ③ 外面一圈柔和的投影，让它浮在页面上方。
-   页面往下滚之后（.glass-bar-solid）掺一点底色，保证压在照片和正文上时导航仍然读得清。
+   只在页面往下滚之后出现（.glass-bar-solid）；停在页面顶部时顶栏是完全透明的。
    ============================================================ */
 .glass-bar {
   position: relative;
   isolation: isolate;
   border-radius: 999px;
-  /* 在页面顶部（压在首屏的豹子上）时几乎是透明的：只有一圈很淡的边和一点点模糊，
-     不压暗、不投影，首屏的沉浸感不被一条深色的栏打断。 */
-  border: 1px solid rgb(255 255 255 / 0.08);
-  background: linear-gradient(
-    135deg,
-    rgb(255 255 255 / 0.055) 0%,
-    rgb(255 255 255 / 0.012) 40%,
-    rgb(255 255 255 / 0.01) 62%,
-    rgb(255 255 255 / 0.04) 100%
-  );
-  -webkit-backdrop-filter: blur(10px) saturate(150%);
-  backdrop-filter: blur(10px) saturate(150%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16);
+  /* 在页面顶部时什么都没有：完全透明，没有边、没有模糊、没有高光，导航直接浮在首屏的画面上。
+     玻璃只在往下滚之后才出现（.glass-bar-solid）。边框留着 1px 的位置但透明，出现时不会跳一下。 */
+  border: 1px solid transparent;
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(0) saturate(100%);
+  backdrop-filter: blur(0) saturate(100%);
+  box-shadow: none;
   transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    -webkit-backdrop-filter 0.4s ease,
+    backdrop-filter 0.4s ease;
 }
-/* 上半边的一片高光：玻璃朝上的弧面反射的天光 */
+/* 上半边的一片高光：玻璃朝上的弧面反射的天光。和玻璃一起出现 */
 .glass-bar::before {
   content: "";
   position: absolute;
@@ -475,18 +471,30 @@ h1 {
   border-radius: 999px 999px 60% 60% / 999px 999px 100% 100%;
   background: linear-gradient(to bottom, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0));
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
-/* 往下滚、压到正文和照片上之后：玻璃才「显形」——模糊加重、边线和高光更清楚、带一点很轻的投影，
-   并掺一点底色保证导航读得清。仍然是浅的、透的，不是一条深色的栏。 */
+/* 往下滚、压到正文和照片上之后：玻璃显形——背后的画面被模糊、提饱和，一圈细边、上缘一线高光、
+   很轻的投影，并掺一点底色保证导航读得清。是浅的、透的，不是一条深色的栏。 */
 .glass-bar-solid {
   border-color: rgb(255 255 255 / 0.13);
   background-color: color-mix(in oklab, var(--color-base) 26%, transparent);
+  background-image: linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.055) 0%,
+    rgb(255 255 255 / 0.012) 40%,
+    rgb(255 255 255 / 0.01) 62%,
+    rgb(255 255 255 / 0.04) 100%
+  );
   -webkit-backdrop-filter: blur(18px) saturate(180%) brightness(1.1);
   backdrop-filter: blur(18px) saturate(180%) brightness(1.1);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.26),
     inset 0 -1px 0 rgb(0 0 0 / 0.14),
     0 8px 24px -10px rgb(0 0 0 / 0.3);
+}
+.glass-bar-solid::before {
+  opacity: 1;
 }
 /* 手机上展开的菜单：同一块玻璃，但是圆角矩形 */
 .glass-panel {
@@ -499,7 +507,7 @@ h1 {
 }
 /* 不支持背景模糊的浏览器：退回成半透明的底色，至少读得清 */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .glass-bar {
+  .glass-bar-solid {
     background-color: color-mix(in oklab, var(--color-base) 88%, transparent);
   }
 }
