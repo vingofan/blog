@@ -13,24 +13,24 @@ export const siteConfig = {
     "https://example.com",
   locale: "zh-CN",
   description:
-    "一个人的四个角落：镜头里看到的世界、写下来才算数的字、还没实现的白日梦，以及那些好玩的小项目。",
+    "一个人的四个角落：镜头里看到的世界、教给 AI 的 Skills、做出来能用的产品，和写下来才算数的文章。",
   keywords: [
     "个人博客",
     "林夕相心",
     "摄影作品集",
-    "随笔",
-    "白日梦",
-    "独立项目",
+    "Skills",
+    "独立产品",
+    "文章",
     "生活记录",
   ],
   social: [{ label: "GitHub", href: "https://github.com/vingofan" }],
   nav: [
     { label: "首页", href: "/" },
     { label: "摄影", href: "/gallery" },
-    { label: "写字的地方", href: "/writing" },
-    { label: "白日梦", href: "/dreams" },
-    { label: "好玩的项目", href: "/projects" },
-    { label: "关于", href: "/about" },
+    { label: "Skills", href: "/skills" },
+    { label: "产品", href: "/products" },
+    { label: "文章", href: "/blog" },
+    { label: "关于我", href: "/about" },
   ],
 } as const;
 

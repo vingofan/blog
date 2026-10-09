@@ -1,5 +1,5 @@
 /**
- * 新建项目脚手架（好玩的项目板块）
+ * 新建 Skill / 产品 的脚手架（两个板块共用 content/projects.json，靠 --kind 区分）
  * ------------------------------------------------------------------
  * 用法：
  *   npm run new-project -- "项目名" my-slug --tagline "一句话简介"
@@ -18,7 +18,7 @@
  *   --featured 首页精选
  *   --force 同名 id 已存在时覆盖
  *
- * 写的是 content/projects.json，详情页路由 /projects/<slug>。
+ * 写的是 content/projects.json。--kind skill → /skills/<slug>；--kind product（默认）→ /products/<slug>。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -73,11 +73,12 @@ const id = flags.slug || positional[1];
 if (!name || !id) {
   console.error(
     [
-      '用法：npm run new-project -- "项目名" my-slug --tagline "一句话简介"',
+      '用法：npm run new-project -- "名称" my-slug --kind skill|product --tagline "一句话简介"',
       "",
       '示例：npm run new-project -- "照片水印工具" watermark --tagline 批量给照片加水印的小脚本 --status 进行中',
       "",
-      "slug 必须是小写字母/数字/连字符，它决定 URL：/projects/<slug>",
+      "--kind 决定放进哪个板块：skill → Skills，product → 产品（不写默认 product）",
+      "slug 必须是小写字母/数字/连字符，它决定 URL：/skills/<slug> 或 /products/<slug>",
     ].join("\n")
   );
   process.exit(1);
@@ -113,8 +114,16 @@ const split = (v, fallback = []) =>
         .filter(Boolean)
     : fallback;
 
+const KINDS = new Set(["skill", "product"]);
+const kind = KINDS.has(flags.kind) ? flags.kind : "product";
+if (flags.kind && !KINDS.has(flags.kind)) {
+  console.warn(`未知板块：${flags.kind}，已按 product 处理。可选：skill / product`);
+}
+const route = kind === "skill" ? "/skills" : "/products";
+
 const project = {
   id,
+  kind,
   name,
   tagline: flags.tagline || "一句话说明这个项目是干什么的。",
   status,
@@ -138,14 +147,14 @@ console.log(
     `✅ 已${existing >= 0 ? "更新" : "创建"}：content/projects.json → ${id}`,
     "",
     `   名称     ${project.name}`,
-    `   访问地址 /projects/${id}`,
+    `   板块     ${kind === "skill" ? "Skills" : "产品"}\n   访问地址 ${route}/${id}`,
     `   状态     ${project.status} · ${project.year}`,
     `   标签     ${project.tags.join(" / ")}`,
     project.links?.length ? `   链接     ${project.links.map((l) => l.label).join(" / ")}` : null,
     "",
     "接下来：",
     "  1. 编辑 content/projects.json，把 tagline 和 body（Markdown）补完整",
-    "  2. npm run dev 打开 http://localhost:3000/projects 预览",
+    `  2. npm run dev 打开 http://localhost:3000${route} 预览`,
     "",
   ]
     .filter(Boolean)

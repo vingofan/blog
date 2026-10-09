@@ -1,6 +1,7 @@
 # 林夕相心
 
-一个个人博客，四个板块：**摄影**（作品集）、**写字的地方**（长文）、**白日梦**（碎片想法）、**好玩的项目**（做着玩的东西）。
+一个个人博客，四个内容板块：**摄影**（作品集）、**Skills**（教给 AI 的技能包）、**产品**（做出来能用的东西）、**文章**（写下来的字）。
+顶栏导航：首页 · 摄影 · Skills · 产品 · 文章 · 关于我。
 深色极简排版 + 低饱和科技感细节；文章用本地 Markdown 写作，作品与项目用 JSON 管理。
 
 **在线地址**：<https://vingoo.app.workbuddy.host/>
@@ -12,9 +13,11 @@
 | 板块 | 路由 | 内容来源 |
 | --- | --- | --- |
 | 摄影 | `/gallery` | `content/photos.json`（+ `section: photography` 的摄影笔记） |
-| 写字的地方 | `/writing` | `content/posts/*.md`，`section: writing` |
-| 白日梦 | `/dreams` | `content/posts/*.md`，`section: dream` |
-| 好玩的项目 | `/projects` | `content/projects.json` |
+| Skills | `/skills` | `content/projects.json` 里 `kind: "skill"` 的条目 |
+| 产品 | `/products` | `content/projects.json` 里 `kind: "product"`（或没写 kind）的条目 |
+| 文章 | `/blog` | `content/posts/*.md`（`section: article`，不写也算） |
+
+旧地址 `/projects`、`/writing`、`/dreams` 会跳到新位置（见 `next.config.ts`）；`/archive` 已删除。
 
 ---
 
@@ -51,7 +54,7 @@ npm run new-post -- "西湖蓝调时刻" westlake-blue-hour --tags 风光,蓝调
 # 可选参数
 #   --tags 标签A,标签B        逗号分隔
 #   --category landscape      分类，只影响占位图配色
-#   --section writing         板块：writing / dream / photography，默认 writing
+#   --section article         板块：article（文章）/ photography（摄影笔记），默认 article
 #   --date 2026-10-01         默认今天
 #   --draft                   建为草稿，不上线
 #   --force                   覆盖同名文件
@@ -98,7 +101,7 @@ npm run new-project -- "项目名" my-slug \
 #   --featured / --force
 ```
 
-写进 `content/projects.json`，详情页在 `/projects/<slug>`。
+写进 `content/projects.json`。加 `--kind skill` 进 Skills 板块（`/skills/<slug>`），不加或 `--kind product` 进产品板块（`/products/<slug>`）。
 正文（body）支持 Markdown，写完在详情页里渲染。
 
 ---
@@ -118,8 +121,8 @@ npm run new-post -- "文章标题" my-english-slug --tags 标签A,标签B
 | 发一篇文章 | `npm run new-post -- "标题" slug --tags A,B`；或手工复制 `content/templates/post-template.md` → 改名 `YYYY-MM-DD-slug.md` → 放进 `content/posts/` → 把 `draft` 改成 `false` |
 | 加一张作品 | `npm run new-photo -- add "标题" slug --category portrait --tags A,B`（`--file ~/a.jpg` 可带上照片） |
 | 批量导入照片 | `npm run new-photo -- import ~/Desktop/*.jpg --category landscape --tags 风光` |
-| 加一个项目 | `npm run new-project -- "项目名" slug --tagline 一句话简介` |
-| 写一篇白日梦 | `npm run new-post -- "一句话或标题" slug --section dream` |
+| 加一个产品 | `npm run new-project -- "产品名" slug --tagline 一句话简介` |
+| 加一个 Skill | `npm run new-project -- "Skill 名" slug --kind skill --tagline 一句话简介` |
 | 换掉占位图 | 同名文件覆盖进 `public/images/photos/`，再把 JSON 里对应的 `.svg` 改成 `.jpg` |
 | 加/改分类 | 编辑 `content/categories.json` |
 | 改站名、作者、导航 | 编辑 `src/config/site.ts` |
@@ -154,9 +157,10 @@ photo-blog/
     ├── app/                      ← 路由（每个文件夹一个页面）
     │   ├── page.tsx              首页
     │   ├── blog/                 文章列表 + [slug] 详情
+    │   ├── skills/               Skills 列表 + [slug] 详情
+    │   ├── products/             产品列表 + [slug] 详情
     │   ├── gallery/              作品集（分类筛选 + 灯箱）
     │   ├── tags/                 标签总览 + [tag] 结果页
-    │   ├── archive/              按年归档
     │   ├── search/               关键词搜索
     │   ├── about/                关于我
     │   ├── sitemap.ts            SEO：站点地图

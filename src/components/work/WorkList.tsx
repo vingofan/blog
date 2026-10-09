@@ -1,35 +1,36 @@
-import type { Metadata } from "next";
 import EmptyHint from "@/components/EmptyHint";
 import PageHeading from "@/components/PageHeading";
 import ProjectCard from "@/components/ProjectCard";
-import { getProjectCounts, projects } from "@/lib/projects";
-import { buildMetadata } from "@/lib/seo";
-import { getSection } from "@/config/sections";
+import { getSection, type WorkKind } from "@/config/sections";
+import { getWorkCounts, getWorks } from "@/lib/projects";
 
-const section = getSection("project")!;
+const EMPTY: Record<WorkKind, { text: string; cmd: string }> = {
+  skill: {
+    text: "还没有放上来的 Skill。",
+    cmd: 'npm run new-project -- "Skill 名" my-slug --kind skill --tagline 一句话简介',
+  },
+  product: {
+    text: "还没有挂上来的产品。",
+    cmd: 'npm run new-project -- "产品名" my-slug --kind product --tagline 一句话简介',
+  },
+};
 
-export const metadata: Metadata = buildMetadata({
-  title: "好玩的项目",
-  description: section.description,
-  path: "/projects",
-});
-
-export default function ProjectsPage() {
-  const counts = getProjectCounts();
+/** Skills / 产品 两个板块共用的列表页，路由文件只负责把 kind 传进来 */
+export default function WorkList({ kind }: { kind: WorkKind }) {
+  const section = getSection(kind)!;
+  const items = getWorks(kind);
+  const counts = getWorkCounts(kind);
 
   return (
     <div className="container-page pt-14 sm:pt-20">
       <PageHeading
-        eyebrow={`${section.code} · 共 ${projects.length} 个`}
-        title="好玩的项目"
+        eyebrow={`${section.code} · 共 ${items.length} ${section.unit}`}
+        title={section.label}
         description={section.description}
       />
 
-      {projects.length === 0 ? (
-        <EmptyHint
-          text="还没有挂上来的项目。"
-          cmd="npm run new-project -- &quot;项目名&quot; my-slug --tagline 一句话简介"
-        />
+      {items.length === 0 ? (
+        <EmptyHint text={EMPTY[kind].text} cmd={EMPTY[kind].cmd} />
       ) : (
         <>
           {/* 状态概览 */}
@@ -49,7 +50,7 @@ export default function ProjectsPage() {
           </dl>
 
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, i) => (
+            {items.map((project, i) => (
               <div key={project.id} data-reveal data-reveal-delay={(i % 3) * 90}>
                 <ProjectCard project={project} />
               </div>

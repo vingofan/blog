@@ -127,8 +127,8 @@ export default function SearchPanel({
           {results.length === 0 ? (
             <p className="mt-6 text-sm leading-relaxed text-(--color-fg-muted)">
               换个说法试试，或者
-              <Link href="/archive" className="ml-1 text-(--color-accent) underline underline-offset-4">
-                按时间浏览全部文章
+              <Link href="/blog" className="ml-1 text-(--color-accent) underline underline-offset-4">
+                看看全部文章
               </Link>
               。
             </p>

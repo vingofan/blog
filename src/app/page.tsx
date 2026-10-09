@@ -10,20 +10,21 @@ import HeroLightning from "@/components/HeroLightning";
 import { siteConfig, siteTagline } from "@/config/site";
 import { getPostsBySection } from "@/lib/posts";
 import { getFeaturedPhotos, photos } from "@/lib/photos";
-import { getFeaturedProjects, projects } from "@/lib/projects";
-import { formatDateCN } from "@/lib/utils";
+import { getFeaturedWorks, getWorks } from "@/lib/projects";
+import { sections } from "@/config/sections";
 
 export default function HomePage() {
-  const writing = getPostsBySection("writing").slice(0, 3);
-  const dreams = getPostsBySection("dream").slice(0, 3);
+  const articles = getPostsBySection("article");
   const featuredPhotos = getFeaturedPhotos(3);
-  const featuredProjects = getFeaturedProjects(3);
+  const featuredSkills = getFeaturedWorks("skill", 3);
+  const featuredProducts = getFeaturedWorks("product", 3);
 
-  const counts = {
+  // 键和 sections.ts 里的板块 id 一一对应
+  const counts: Record<string, number> = {
     photography: photos.length,
-    writing: getPostsBySection("writing").length,
-    dream: getPostsBySection("dream").length,
-    project: projects.length,
+    skill: getWorks("skill").length,
+    product: getWorks("product").length,
+    article: articles.length,
   };
 
   return (
@@ -86,12 +87,8 @@ export default function HomePage() {
             className="lt-late mt-12 flex flex-wrap gap-x-10 gap-y-4 font-mono text-[0.7rem] tracking-wider sm:mt-14"
             style={{ "--ld": "2.5s" } as React.CSSProperties}
           >
-            {[
-              { label: "摄影", value: counts.photography, unit: "张" },
-              { label: "写字", value: counts.writing, unit: "篇" },
-              { label: "白日梦", value: counts.dream, unit: "则" },
-              { label: "项目", value: counts.project, unit: "个" },
-            ]
+            {sections
+              .map((sec) => ({ label: sec.label, value: counts[sec.id] ?? 0, unit: sec.unit }))
               // 还没有内容的板块先不报数——首屏写着「0 篇」只会让人觉得这里是空的
               .filter((item) => item.value > 0)
               .map((item) => (
@@ -209,18 +206,74 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* 最新文字 */}
-      {writing.length > 0 && (
+      {/* Skills */}
+      {featuredSkills.length > 0 && (
         <section className="container-page mt-24 sm:mt-32" data-reveal>
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--color-line-soft) pb-5">
             <div>
-              <p className="eyebrow">02 · 写字的地方</p>
+              <p className="eyebrow">02 · Skills</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+                教给 AI 的
+              </h2>
+            </div>
+            <Link
+              href="/skills"
+              className="link-underline text-sm text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
+            >
+              全部 Skills →
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredSkills.map((project, i) => (
+              <div key={project.id} data-reveal data-reveal-delay={i * 90}>
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 产品 */}
+      {featuredProducts.length > 0 && (
+        <section className="container-page mt-24 sm:mt-32" data-reveal>
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--color-line-soft) pb-5">
+            <div>
+              <p className="eyebrow">03 · 产品</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+                做出来的
+              </h2>
+            </div>
+            <Link
+              href="/products"
+              className="link-underline text-sm text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
+            >
+              全部产品 →
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredProducts.map((project, i) => (
+              <div key={project.id} data-reveal data-reveal-delay={i * 90}>
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 文章 */}
+      {articles.length > 0 && (
+        <section className="container-page mt-24 sm:mt-32" data-reveal>
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--color-line-soft) pb-5">
+            <div>
+              <p className="eyebrow">04 · 文章</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
                 最近写下的
               </h2>
             </div>
             <Link
-              href="/writing"
+              href="/blog"
               className="link-underline text-sm text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
             >
               全部文章 →
@@ -228,80 +281,9 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {writing.map((post, i) => (
+            {articles.slice(0, 3).map((post, i) => (
               <div key={post.slug} data-reveal data-reveal-delay={i * 90}>
                 <PostCard post={post} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 白日梦 */}
-      {dreams.length > 0 && (
-        <section className="container-page mt-24 sm:mt-32" data-reveal>
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--color-line-soft) pb-5">
-            <div>
-              <p className="eyebrow">03 · 白日梦</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                想着玩的
-              </h2>
-            </div>
-            <Link
-              href="/dreams"
-              className="link-underline text-sm text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
-            >
-              全部白日梦 →
-            </Link>
-          </div>
-
-          <ul className="mt-10 grid gap-4 sm:grid-cols-3">
-            {dreams.map((dream, i) => (
-              <li key={dream.slug} data-reveal data-reveal-delay={i * 90}>
-                <Link href={dream.url} className="tech-card group block h-full p-6">
-                  <time
-                    dateTime={dream.date}
-                    className="font-mono text-[0.65rem] tracking-wider text-(--color-fg-subtle)"
-                  >
-                    {formatDateCN(dream.date)}
-                  </time>
-                  <p className="mt-3 text-sm leading-relaxed text-(--color-fg-muted) transition-colors group-hover:text-(--color-fg)">
-                    {dream.excerpt || dream.title}
-                  </p>
-                  {dream.wordCount > 200 && (
-                    <span className="mt-4 inline-block font-mono text-[0.65rem] tracking-wider text-(--color-tech) opacity-80">
-                      阅读全文 →
-                    </span>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* 好玩的项目 */}
-      {featuredProjects.length > 0 && (
-        <section className="container-page mt-24 sm:mt-32" data-reveal>
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-(--color-line-soft) pb-5">
-            <div>
-              <p className="eyebrow">04 · 好玩的项目</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                做着玩的
-              </h2>
-            </div>
-            <Link
-              href="/projects"
-              className="link-underline text-sm text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
-            >
-              全部项目 →
-            </Link>
-          </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((project, i) => (
-              <div key={project.id} data-reveal data-reveal-delay={i * 90}>
-                <ProjectCard project={project} />
               </div>
             ))}
           </div>
@@ -316,8 +298,8 @@ export default function HomePage() {
             {siteConfig.author} · {siteConfig.role}
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-loose text-(--color-fg-muted) sm:text-[1rem]">
-            常驻{siteConfig.location}。拍照只是生活里的一块，另外几块是写字、胡思乱想，
-            和做一些没什么用但很好玩的小东西。这个站点就是这四块的存放处——
+            常驻{siteConfig.location}。拍照只是生活里的一块，另外几块是给 AI 攒 Skills、
+            做点能用的产品，和把想清楚的事写成文章。这个站点就是这四块的存放处——
             不追日更，也不追热点，攒够了才放上来。
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -326,12 +308,6 @@ export default function HomePage() {
               className="border border-(--color-line) px-5 py-2.5 text-[0.8rem] tracking-wide text-(--color-fg) transition-colors hover:border-(--color-accent) hover:text-(--color-accent)"
             >
               了解更多
-            </Link>
-            <Link
-              href="/archive"
-              className="px-5 py-2.5 text-[0.8rem] tracking-wide text-(--color-fg-muted) transition-colors hover:text-(--color-fg)"
-            >
-              浏览归档
             </Link>
           </div>
         </div>

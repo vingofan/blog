@@ -10,7 +10,7 @@ import matter from "gray-matter";
 
 import { getAllPosts } from "./posts";
 import { getCategoryLabel, photos } from "./photos";
-import { projects } from "./projects";
+import { projects, workUrl } from "./projects";
 import type { SearchDoc } from "./types";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
@@ -93,7 +93,7 @@ export function buildSearchIndex(): SearchDoc[] {
     docs.push({
       type: "project",
       title: project.name,
-      url: `/projects/${project.id}`,
+      url: workUrl(project),
       excerpt: project.tagline,
       date: project.year,
       tags: [...project.tags, project.status, ...(project.stack ?? [])],

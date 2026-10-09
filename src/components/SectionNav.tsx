@@ -2,7 +2,7 @@ import Link from "next/link";
 import { sections } from "@/config/sections";
 
 /**
- * 四个板块的入口卡。
+ * 四个内容板块（摄影 / Skills / 产品 / 文章）的入口卡。
  * counts 用来显示每个板块当前有多少内容，没有就不显示数量。
  */
 export default function SectionNav({

@@ -5,12 +5,12 @@ import { siteConfig, siteTagline } from "@/config/site";
 import { sections } from "@/config/sections";
 import { getPostsBySection } from "@/lib/posts";
 import { photos } from "@/lib/photos";
-import { projects } from "@/lib/projects";
+import { getWorks } from "@/lib/projects";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "关于我",
-  description: `${siteConfig.author}的个人站点${siteConfig.name}：摄影、写字、白日梦和好玩的项目，以及这个站点是怎么搭起来的。`,
+  description: `${siteConfig.author}的个人站点${siteConfig.name}：摄影、Skills、产品和文章，以及这个站点是怎么搭起来的。`,
   path: "/about",
 });
 
@@ -26,15 +26,15 @@ const TIMELINE = [
   { year: "2021", text: "从胶片机开始拍照，第一台是二手的 FM2。" },
   { year: "2023", text: "开始认真做后期，也第一次给别人拍摄。" },
   { year: "2025", text: "在深圳安定下来，开始把拍照之外的事也记下来。" },
-  { year: "2026", text: "把这个站点重做成四个角落：摄影、写字、白日梦、好玩的项目。" },
+  { year: "2026", text: "把这个站点重做成四个角落：摄影、Skills、产品、文章。" },
 ];
 
 export default function AboutPage() {
   const counts: Record<string, number> = {
     photography: photos.length,
-    writing: getPostsBySection("writing").length,
-    dream: getPostsBySection("dream").length,
-    project: projects.length,
+    skill: getWorks("skill").length,
+    product: getWorks("product").length,
+    article: getPostsBySection("article").length,
   };
 
   return (
@@ -50,14 +50,14 @@ export default function AboutPage() {
         <div className="prose-photo" data-reveal>
           <p>
             拍照是我最早开始做的事，但它慢慢变成生活里的一块，而不是全部。
-            除了镜头，我还需要一个地方放写下来的字、没实现的想法，
-            和那些做完也不指望有回报的小东西——所以这个站点现在是四个角落。
+            除了镜头，我还需要一个地方放教给 AI 的 Skills、做出来的产品，
+            和写下来的文章——所以这个站点现在是四个角落。
           </p>
 
           <h2 id="four-corners">四个角落</h2>
           <p>
-            每个角落的更新节奏都不一样：照片攒够一批就发，文字想清楚了才写，
-            白日梦随时记，项目则完全看心情。没有哪一块是主业。
+            每个角落的更新节奏都不一样：照片攒够一批就发，Skills 用顺手了才放上来，
+            产品做到能用才算数，文章想清楚了才写。没有哪一块是主业。
           </p>
           <ul>
             {sections.map((s) => (

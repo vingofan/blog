@@ -97,12 +97,12 @@ const cover = flags.cover || `/images/covers/${slug}.svg`;
 const draft = Boolean(flags.draft);
 const author = flags.author || "林夕";
 
-// 板块：writing（写字的地方）/ dream（白日梦）/ photography（摄影笔记）
-const SECTIONS = new Set(["writing", "dream", "photography"]);
-const section = SECTIONS.has(flags.section) ? flags.section : "writing";
+// 板块：article（文章）/ photography（摄影笔记，挂在摄影页下）
+const SECTIONS = new Set(["article", "photography"]);
+const section = SECTIONS.has(flags.section) ? flags.section : "article";
 if (flags.section && !SECTIONS.has(flags.section)) {
   console.warn(
-    `未知板块：${flags.section}，已按 writing 处理。可选：writing / dream / photography`
+    `未知板块：${flags.section}，已按 article 处理。可选：article / photography`
   );
 }
 
@@ -172,7 +172,7 @@ console.log(
     `✅ 已创建：content/posts/${fileName}`,
     "",
     `   标题     ${title}`,
-    `   板块     ${section}（writing=写字的地方 / dream=白日梦 / photography=摄影笔记）`,
+    `   板块     ${section}（article=文章 / photography=摄影笔记）`,
     `   访问地址 /blog/${slug}`,
     `   封面图   ${cover}（占位图会自动生成）`,
     `   标签     ${tags.join(" / ")}`,

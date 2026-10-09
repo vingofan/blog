@@ -75,20 +75,10 @@ export default async function PostPage({ params }: PageProps) {
           </Link>
           <span className="mx-2">/</span>
           <Link
-            href={
-              post.sectionId === "dream"
-                ? "/dreams"
-                : post.sectionId === "photography"
-                  ? "/gallery"
-                  : "/writing"
-            }
+            href={post.sectionId === "photography" ? "/gallery" : "/blog"}
             className="transition-colors hover:text-(--color-fg)"
           >
-            {post.sectionId === "dream"
-              ? "白日梦"
-              : post.sectionId === "photography"
-                ? "摄影"
-                : "写字的地方"}
+            {post.sectionId === "photography" ? "摄影" : "文章"}
           </Link>
         </nav>
 

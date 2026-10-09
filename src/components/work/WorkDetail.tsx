@@ -1,38 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllProjectIds, getProject, projects } from "@/lib/projects";
+import { getSection, type WorkKind } from "@/config/sections";
 import { renderMarkdown } from "@/lib/markdown";
-import { buildMetadata } from "@/lib/seo";
+import { getWork, getWorks, workUrl } from "@/lib/projects";
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
-export function generateStaticParams() {
-  return getAllProjectIds().map((slug) => ({ slug }));
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const project = getProject(slug);
-  if (!project) return buildMetadata({ title: "项目不存在", noIndex: true });
-
-  return buildMetadata({
-    title: project.name,
-    description: project.tagline,
-    path: `/projects/${project.id}`,
-    image: project.cover,
-  });
-}
-
-export default async function ProjectDetailPage({ params }: PageProps) {
-  const { slug } = await params;
-  const project = getProject(slug);
+/**
+ * Skills / 产品 两个板块共用的详情页。两个路由（/skills/[slug]、/products/[slug]）各自只是一层薄壳，
+ * 把 kind 传进来；页面长什么样只在这里维护一份。
+ */
+export default async function WorkDetail({ kind, slug }: { kind: WorkKind; slug: string }) {
+  const section = getSection(kind)!;
+  const project = getWork(kind, slug);
   if (!project) notFound();
 
   const html = project.body ? await renderMarkdown(project.body) : "";
-  const others = projects.filter((p) => p.id !== project.id).slice(0, 3);
+  const others = getWorks(kind).filter((p) => p.id !== project.id).slice(0, 3);
 
   return (
     <article className="container-page pt-14 sm:pt-20">
@@ -44,8 +26,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           首页
         </Link>
         <span className="mx-2">/</span>
-        <Link href="/projects" className="transition-colors hover:text-(--color-fg)">
-          好玩的项目
+        <Link href={section.href} className="transition-colors hover:text-(--color-fg)">
+          {section.label}
         </Link>
       </nav>
 
@@ -142,17 +124,17 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         />
       ) : (
         <p className="mt-14 max-w-2xl text-sm leading-loose text-(--color-fg-subtle)">
-          这个项目还没写细节。在 <code>content/projects.json</code> 里给它的 body 字段补一段 Markdown 就行。
+          这一条还没写细节。在 <code>content/projects.json</code> 里给它的 body 字段补一段 Markdown 就行。
         </p>
       )}
 
       {others.length > 0 && (
         <section className="mt-24 border-t border-(--color-line-soft) pt-12">
-          <h2 className="eyebrow">其他项目</h2>
+          <h2 className="eyebrow">{section.label}里的其他内容</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-3">
             {others.map((p) => (
               <li key={p.id}>
-                <Link href={`/projects/${p.id}`} className="card-dark block p-5 transition-colors hover:border-(--color-tech-dim)">
+                <Link href={workUrl(p)} className="card-dark block p-5 transition-colors hover:border-(--color-tech-dim)">
                   <span className="font-mono text-[0.65rem] tracking-wider text-(--color-fg-subtle)">
                     {p.status} · {p.year}
                   </span>

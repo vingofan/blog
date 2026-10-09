@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import { categories } from "@/lib/photos";
-import { projects } from "@/lib/projects";
+import { projects, workUrl } from "@/lib/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
@@ -11,12 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/gallery`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${base}/writing`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${base}/dreams`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${base}/projects`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}/skills`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/products`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/tags`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${base}/archive`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/about`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
   ];
 
@@ -42,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const projectRoutes: MetadataRoute.Sitemap = projects.map((p) => ({
-    url: `${base}/projects/${p.id}`,
+    url: `${base}${workUrl(p)}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,

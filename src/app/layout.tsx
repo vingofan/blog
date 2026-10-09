@@ -18,7 +18,7 @@ const displayFont = Noto_Serif_SC({
   preload: false,
 });
 
-const SITE_TITLE = `${siteConfig.name} · 摄影 · 写字 · 白日梦 · 项目`;
+const SITE_TITLE = `${siteConfig.name} · 摄影 · Skills · 产品 · 文章`;
 
 export const metadata: Metadata = {
   ...buildMetadata({

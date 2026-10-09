@@ -7,7 +7,7 @@ description: "可选的 SEO 描述，不写就自动沿用 excerpt。"
 cover: "/images/covers/blue-hour-westlake.svg"
 coverAlt: "封面图的替代文本，读屏和 SEO 都要用"
 category: "landscape"
-section: "writing"
+section: "article"
 tags: ["标签一", "标签二"]
 draft: true
 author: "林夕"
@@ -47,5 +47,5 @@ readingTime: 5
 
 > **写完记得做三件事**
 > 1. 把文件名改成 `YYYY-MM-DD-你的-slug.md` 并放进 `content/posts/`
-> 2. 确认 `section` 写对了：`writing`=写字的地方、`dream`=白日梦、`photography`=摄影笔记
+> 2. 确认 `section` 写对了：`article`=文章、`photography`=摄影笔记（挂在摄影页下）
 > 3. 把上面的 `draft: true` 改成 `draft: false`（或删掉这一行），否则文章不会上线

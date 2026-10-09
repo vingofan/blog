@@ -2,7 +2,7 @@
  * 全站共享的类型定义
  * 修改数据源（content/photos.json、content/posts/*.md、content/projects.json）时以此为准。
  */
-import type { PostSectionId } from "@/config/sections";
+import type { PostSectionId, WorkKind } from "@/config/sections";
 
 /** 作品分类：id 对应 content/categories.json */
 export interface Category {
@@ -51,7 +51,7 @@ export interface PostFrontmatter {
   cover: string;
   coverAlt?: string;
   category: string;
-  /** 归属板块：写字的地方 / 白日梦 / 摄影笔记。缺省按 writing 处理 */
+  /** 归属板块：article（文章）/ photography（摄影笔记）。缺省按 article 处理；旧的 writing、dream 也算 article */
   section?: PostSectionId;
   tags: string[];
   draft?: boolean;
@@ -67,7 +67,7 @@ export interface PostMeta extends PostFrontmatter {
   readingMinutes: number;
   /** 归属板块（已兜底） */
   sectionId: PostSectionId;
-  /** 正文纯文本字数，用于判断长短文（白日梦板块混排用） */
+  /** 正文纯文本字数 */
   wordCount: number;
 }
 
@@ -86,8 +86,10 @@ export interface TocItem {
 /** 项目状态 */
 export type ProjectStatus = "进行中" | "已完成" | "搁置";
 
-/** 一个好玩的项目（content/projects.json） */
+/** Skills / 产品 板块的一条内容（content/projects.json） */
 export interface Project {
+  /** 属于哪个板块：skill → /skills，product → /products。不写按 product 处理 */
+  kind?: WorkKind;
   /** 同时作为 URL 的 slug，只能用小写字母/数字/连字符 */
   id: string;
   name: string;

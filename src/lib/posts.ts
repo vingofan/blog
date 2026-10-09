@@ -14,7 +14,7 @@ import type { PostSectionId } from "@/config/sections";
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");
 
-/** 中文字数 + 英文词数，用于判断长短文（白日梦板块混排） */
+/** 中文字数 + 英文词数 */
 function countWords(markdown: string): number {
   const text = markdown
     .replace(/```[\s\S]*?```/g, " ")
@@ -26,9 +26,9 @@ function countWords(markdown: string): number {
   return cjk + latin;
 }
 
-/** frontmatter 里没写 section 时，按 writing 处理 */
+/** 摄影笔记单独算；其余（没写、article，以及旧的 writing / dream）都是文章 */
 function normalizeSection(value: unknown): PostSectionId {
-  return value === "dream" || value === "photography" ? value : "writing";
+  return value === "photography" ? "photography" : "article";
 }
 
 /** 文件名 2026-09-18-westlake-blue-hour.md → slug = westlake-blue-hour */
@@ -114,7 +114,7 @@ export function getLatestPosts(limit = 6): PostMeta[] {
   return getAllPosts().slice(0, limit);
 }
 
-/** 按板块取文章（写字的地方 / 白日梦 / 摄影笔记） */
+/** 按板块取文章（文章 / 摄影笔记） */
 export function getPostsBySection(section: PostSectionId): PostMeta[] {
   return getAllPosts().filter((p) => p.sectionId === section);
 }
@@ -123,8 +123,7 @@ export function getPostsBySection(section: PostSectionId): PostMeta[] {
 export function getSectionCounts(): Record<PostSectionId, number> {
   const all = getAllPosts();
   return {
-    writing: all.filter((p) => p.sectionId === "writing").length,
-    dream: all.filter((p) => p.sectionId === "dream").length,
+    article: all.filter((p) => p.sectionId === "article").length,
     photography: all.filter((p) => p.sectionId === "photography").length,
   };
 }
@@ -180,19 +179,6 @@ export function getAllTags(): { tag: string; count: number }[] {
 
 export function getPostsByTag(tag: string): PostMeta[] {
   return getAllPosts().filter((p) => p.tags.includes(tag));
-}
-
-/** 归档：按年份分组 */
-export function getArchive(): { year: string; posts: PostMeta[] }[] {
-  const map = new Map<string, PostMeta[]>();
-  for (const post of getAllPosts()) {
-    const list = map.get(post.year) ?? [];
-    list.push(post);
-    map.set(post.year, list);
-  }
-  return Array.from(map.entries())
-    .map(([year, posts]) => ({ year, posts }))
-    .sort((a, b) => Number(b.year) - Number(a.year));
 }
 
 /** 相关推荐：共享标签数量最多的几篇 */

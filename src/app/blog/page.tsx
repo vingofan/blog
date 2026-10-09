@@ -5,11 +5,13 @@ import PageHeading from "@/components/PageHeading";
 import PostCard from "@/components/PostCard";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import { buildMetadata } from "@/lib/seo";
+import { getSection } from "@/config/sections";
+
+const section = getSection("article")!;
 
 export const metadata: Metadata = buildMetadata({
-  title: "全部文字",
-  description:
-    "写字的地方、白日梦与摄影笔记的汇总列表，按时间倒序排列。",
+  title: section.label,
+  description: section.description,
   path: "/blog",
 });
 
@@ -20,30 +22,14 @@ export default function BlogListPage() {
   return (
     <div className="container-page pt-14 sm:pt-20">
       <PageHeading
-        eyebrow={`共 ${posts.length} 篇`}
-        title="全部文字"
-        description="所有写下来的东西都在这里，不分板块。想分开看可以去各自的栏目。"
+        eyebrow={`${section.code} · 共 ${posts.length} ${section.unit}`}
+        title={section.label}
+        description={section.description}
       />
-
-      <div className="mt-8 flex flex-wrap gap-2">
-        {[
-          { label: "写字的地方", href: "/writing" },
-          { label: "白日梦", href: "/dreams" },
-          { label: "摄影", href: "/gallery" },
-        ].map((s) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            className="mono-tag transition-colors hover:border-(--color-tech-dim) hover:text-(--color-fg)"
-          >
-            {s.label}
-          </Link>
-        ))}
-      </div>
 
       {posts.length === 0 ? (
         <EmptyHint
-          text="还没有文章。"
+          text="还没有写下来的东西。"
           cmd="npm run new-post -- &quot;文章标题&quot; my-slug"
         />
       ) : (

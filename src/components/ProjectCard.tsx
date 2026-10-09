@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cx } from "@/lib/utils";
+import { workUrl } from "@/lib/projects";
 import type { Project } from "@/lib/types";
 
 const STATUS_STYLE: Record<string, string> = {
@@ -26,7 +27,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <h3 className="mt-5 text-[1rem] font-semibold leading-snug tracking-tight text-(--color-fg) transition-colors group-hover:text-(--color-accent)">
-        <Link href={`/projects/${project.id}`}>{project.name}</Link>
+        <Link href={workUrl(project)}>{project.name}</Link>
       </h3>
 
       <p className="mt-2.5 flex-1 text-sm leading-relaxed text-(--color-fg-muted)">
@@ -44,7 +45,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       )}
 
       <Link
-        href={`/projects/${project.id}`}
+        href={workUrl(project)}
         className="mt-5 inline-flex items-center gap-1.5 font-mono text-[0.68rem] tracking-wider text-(--color-fg-subtle) transition-colors group-hover:text-(--color-tech)"
       >
         看看细节
