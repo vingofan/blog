@@ -189,6 +189,9 @@ export default function HomePage() {
                   alt={photo.alt}
                   width={photo.width}
                   height={photo.height}
+                  // 首页三张是 380px 宽的卡片，不能下 600KB 的原图：走 next/image 按需出图
+                  optimized
+                  sizes="(min-width: 640px) 380px, 100vw"
                   className="w-full overflow-hidden rounded-lg"
                   imgClassName="transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                 />

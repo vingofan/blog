@@ -10,9 +10,11 @@ import { siteConfig } from "@/config/site";
 import { buildMetadata } from "@/lib/seo";
 
 /** 标题用的衬线体：和羊毛毡吉祥物的手工感对上；正文仍是系统黑体。
-    中文字体很大，不预加载，交给 unicode-range 分片按需取。 */
+    中文字体很大，不预加载，交给 unicode-range 分片按需取。
+    用可变字体而不是 ["600", "900"] 两档静态字重：分片文件是同一批，但 @font-face 从 203 条
+    减到 102 条，阻塞渲染的样式表从 67KB 降到 33KB（gzip），首次绘制提前约 200ms。 */
 const displayFont = Noto_Serif_SC({
-  weight: ["600", "900"],
+  weight: "variable",
   variable: "--font-display-loaded",
   display: "swap",
   preload: false,

@@ -16,6 +16,18 @@ const nextConfig: NextConfig = {
       { source: "/dreams", destination: "/blog", permanent: true },
     ];
   },
+  // public/images 下的文件名不带内容哈希，不能设成「永不过期」；缓存一天、过期后先用旧的同时后台更新。
+  // 原来是 max-age=0：回访的人每个文件都要去问一遍服务器（视频、图片、站标都是）。
+  async headers() {
+    return [
+      {
+        source: "/images/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
+    ];
+  },
   images: {
     // 占位图与替换后的本地图片都放在 public/images 下。
     // 若之后接入图床/CDN，把远程域名加进 remotePatterns 即可继续用 next/image 优化。
